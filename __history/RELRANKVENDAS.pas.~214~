@@ -1,0 +1,1311 @@
+﻿unit RELRANKVENDAS;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, frxClass,
+  frxDBSet, MemDS, DBAccess, Uni, Vcl.ComCtrls, Vcl.Buttons, Vcl.Grids,
+  Vcl.DBGrids, Vcl.DBCtrls, Vcl.DBCGrids, Datasnap.DBClient, Data.DB;
+
+
+
+
+
+
+type
+
+
+
+  TRelrkvend = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    Panel2: TPanel;
+    cmbgrupo: TComboBox;
+    Label2: TLabel;
+    Label3: TLabel;
+    cmbfornecedor: TComboBox;
+    Label4: TLabel;
+    cmbmarca: TComboBox;
+    Label6: TLabel;
+    dtfim: TDateTimePicker;
+    dtinicio: TDateTimePicker;
+    Label10: TLabel;
+    Label8: TLabel;
+    QRYGRUPOS: TUniQuery;
+    DBPRODUTOS: TfrxDBDataset;
+    FRXRAKVEND: TfrxReport;
+    QRYRKVEND: TUniQuery;
+    QRYMARCA: TUniQuery;
+    QRYFORNECEDOR: TUniQuery;
+    btnconsulta: TBitBtn;
+    dsQRYRKVEND: TDataSource;
+    Editlocal: TEdit;
+    Label5: TLabel;
+    CDSPRODUTOS: TClientDataSet;
+    DSCDSPRODUTOS: TDataSource;
+    CDSPRODUTOSCodInterno: TStringField;
+    CDSPRODUTOSProduto: TStringField;
+    CDSPRODUTOSGrupo: TStringField;
+    CDSPRODUTOSMarca: TStringField;
+    CDSPRODUTOSFornecedor: TStringField;
+    CDSPRODUTOSQuantidadeVendida: TIntegerField;
+    CDSPRODUTOSContagem: TIntegerField;
+    CDSPRODUTOSDiferenca: TIntegerField;
+    CDSPRODUTOSPeriodo: TStringField;
+    CDSPRODUTOSLocalizacao: TStringField;
+    CDSPRODUTOSprecocusto: TCurrencyField;
+    CDSPRODUTOScustototal: TCurrencyField;
+    CDSPRODUTOSCodFornecedor: TStringField;
+    CDSPRODUTOSValorDiferenca: TCurrencyField;
+    CDSTOTAIS: TClientDataSet;
+    CDSTOTAISTOTALCUSTO: TCurrencyField;
+    CDSTOTAISTOTALDIFERENCA: TCurrencyField;
+    DSCDSTOTAIS: TDataSource;
+    DBTOTAIS: TfrxDBDataset;
+    CDSPRODUTOSEstoque: TFloatField;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    dbgridprodutos: TDBCtrlGrid;
+    Panel5: TPanel;
+    DBText9: TDBText;
+    Label19: TLabel;
+    DBText10: TDBText;
+    Label20: TLabel;
+    Panel6: TPanel;
+    DBText4: TDBText;
+    Label14: TLabel;
+    DBText5: TDBText;
+    Label15: TLabel;
+    Panel7: TPanel;
+    Label16: TLabel;
+    DBText6: TDBText;
+    Label17: TLabel;
+    DBText7: TDBText;
+    Panel8: TPanel;
+    DBText3: TDBText;
+    Label13: TLabel;
+    DBText1: TDBText;
+    Label11: TLabel;
+    Panel9: TPanel;
+    DBText2: TDBText;
+    Label12: TLabel;
+    Label18: TLabel;
+    DBText8: TDBText;
+    Panel14: TPanel;
+    Panel13: TPanel;
+    DBTextproduto: TDBText;
+    Label21: TLabel;
+    Panel12: TPanel;
+    DBTextquantidade: TDBText;
+    Label22: TLabel;
+    Panel11: TPanel;
+    Label23: TLabel;
+    Editcontagem: TEdit;
+    Panel10: TPanel;
+    Labeldiferença: TLabel;
+    Label24: TLabel;
+    TabSheet2: TTabSheet;
+    Panel22: TPanel;
+    DBCtrlGrid1: TDBCtrlGrid;
+    Panel16: TPanel;
+    Label26: TLabel;
+    DBTextcod: TDBText;
+    Panel17: TPanel;
+    DBTextdif: TDBText;
+    Label27: TLabel;
+    Panel18: TPanel;
+    DBTextqtd: TDBText;
+    Label28: TLabel;
+    Panel19: TPanel;
+    Label29: TLabel;
+    DBText11: TDBText;
+    Panel20: TPanel;
+    Label30: TLabel;
+    DBTextest: TDBText;
+    Panel21: TPanel;
+    Label31: TLabel;
+    DBTextprod: TDBText;
+    Panel23: TPanel;
+    btnrelatpositivo: TBitBtn;
+    btnapagar: TBitBtn;
+    btnrelatnegativo: TBitBtn;
+    btnrelacorreto: TBitBtn;
+    Btndown: TButton;
+    btnup: TButton;
+    btnconfirma: TBitBtn;
+    Labelconferido: TLabel;
+    Pnteclado: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
+    BitBtn8: TBitBtn;
+    BitBtn9: TBitBtn;
+    BitBtn10: TBitBtn;
+    BitBtn11: TBitBtn;
+    BitBtn12: TBitBtn;
+    BitBtn13: TBitBtn;
+    BitBtn14: TBitBtn;
+   
+    procedure CarregarGrupos;
+    procedure CarregarMarcas;
+    procedure CarregarFornecedores;
+
+    procedure CriarEstruturaManualCDS;
+    procedure FormShow(Sender: TObject);
+    procedure btnconsultaClick(Sender: TObject);
+    procedure EditcontagemChange(Sender: TObject);
+
+    procedure btnrelatpositivoClick(Sender: TObject);
+    procedure btnapagarClick(Sender: TObject);
+    procedure CDSPRODUTOSCalcFields(DataSet: TDataSet);
+    procedure btnrelatnegativoClick(Sender: TObject);
+    procedure CalcularETotalizar;
+    procedure btnrelacorretoClick(Sender: TObject);
+  
+  
+
+
+
+    procedure EditcontagemKeyPress(Sender: TObject; var Key: Char);
+    procedure btnconfirmaClick(Sender: TObject);
+ 
+    procedure btnupClick(Sender: TObject);
+    procedure BtndownClick(Sender: TObject);
+    procedure QRYRKVENDAfterScroll(DataSet: TDataSet);
+    procedure TeclaClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
+    procedure BitBtn8Click(Sender: TObject);
+    procedure BitBtn9Click(Sender: TObject);
+    procedure BitBtn12Click(Sender: TObject);
+    procedure BitBtn10Click(Sender: TObject);
+    procedure BitBtn11Click(Sender: TObject);
+    procedure BitBtn14Click(Sender: TObject);
+    procedure BitBtn13Click(Sender: TObject);
+
+
+  
+
+
+
+   
+  
+
+  private
+
+    procedure RelatorioManual;
+  public
+    { Public declarations }
+  end;
+
+var
+  Relrkvend: TRelrkvend;
+
+implementation
+
+{$R *.dfm}
+
+uses CONEXAOBD;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+procedure TRelrkvend.BitBtn10Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn11Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn12Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn13Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn14Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn1Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn2Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn3Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn4Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn5Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn6Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn7Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn8Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.BitBtn9Click(Sender: TObject);
+begin
+TeclaClick;
+end;
+
+procedure TRelrkvend.btnapagarClick(Sender: TObject);
+begin
+  // 1. Verifica se o ClientDataSet está aberto e possui registros
+  if not CDSPRODUTOS.Active or CDSPRODUTOS.IsEmpty then
+  begin
+    ShowMessage('Não há registros de contagem para excluir no momento.');
+    Exit;
+  end;
+
+  // 2. Confirmação do Usuário
+  // Pega o nome do produto selecionado para exibir na mensagem de confirmação
+  if MessageDlg('Tem certeza que deseja APAGAR o registro de contagem do produto: ' +
+                 CDSPRODUTOS.FieldByName('Produto').AsString + '?',
+                 mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    try
+      // 3. Exclui o registro atual (o que está selecionado no DBCtrlGrid1)
+      CDSPRODUTOS.Delete;
+
+      ShowMessage('Registro de contagem excluído com sucesso.');
+
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Erro ao excluir o registro: ' + E.Message);
+      end;
+    end;
+  end;
+end;
+
+
+procedure TRelrkvend.btnconfirmaClick(Sender: TObject);
+
+var
+  // MUDANÇA: Usar Extended para aceitar números decimais (melhor precisão que Real/Float)
+  Contagem: Extended;
+  EstoqueAtual: Extended; // Variável para o Estoque lido da QRY
+  PeriodoStr: String;
+  CodInternoAtual: String;
+  Operacao: String; // Para informar se foi Inserção ou Edição
+begin
+  // 1. Validação de Dados de Entrada
+  if not CDSPRODUTOS.Active then
+    CDSPRODUTOS.Open;
+
+  if QRYRKVEND.IsEmpty then
+  begin
+    ShowMessage('Nenhuma consulta de produtos foi realizada. Clique em Consultar primeiro.');
+    Exit;
+  end;
+
+  if Trim(Editcontagem.Text) = '' then
+  begin
+    ShowMessage('A contagem não pode ser vazia.');
+    Exit;
+  end;
+
+  // TENTA CONVERTER O VALOR DECIMAL
+  // Usa TryStrToFloat e muda a mensagem de erro
+  if not TryStrToFloat(Editcontagem.Text, Contagem) then
+  begin
+    ShowMessage('A contagem deve ser um número válido (inteiro ou decimal). Por favor, corrija o valor.');
+    Editcontagem.SetFocus;
+    Exit;
+  end;
+
+  // Lê o estoque atual para o cálculo
+  EstoqueAtual := QRYRKVEND.FieldByName('Estoque').AsFloat; // Assume que o campo 'Estoque' do QRY é decimal
+
+  // 2. Identifica o Produto Atual e o Período
+  CodInternoAtual := QRYRKVEND.FieldByName('CodInterno').AsString;
+  PeriodoStr := FormatDateTime('dd/mm/yyyy', dtinicio.Date) + ' a ' + FormatDateTime('dd/mm/yyyy', dtfim.Date);
+
+  // 3. Tenta Localizar o registro no CDSPRODUTOS pelo CodInterno
+  if CDSPRODUTOS.Locate('CodInterno', CodInternoAtual, []) then
+  begin
+    // =========================================================
+    // REGISTRO ENCONTRADO: Entra em Edição (Atualiza a Contagem)
+    // =========================================================
+    Operacao := 'Atualizado';
+    CDSPRODUTOS.Edit;
+
+    // 4A. Atualiza Campos Dinâmicos (Estoque, Vendas, Custos e Info)
+
+    // ATENÇÃO: Se os campos Estoque e QuantidadeVendida foram alterados para ftFloat,
+    // Mantenha AsFloat aqui para evitar arredondamento.
+    CDSPRODUTOS.FieldByName('Estoque').AsFloat := EstoqueAtual;
+    CDSPRODUTOS.FieldByName('QuantidadeVendida').AsFloat := QRYRKVEND.FieldByName('QuantidadeVendida').AsFloat; // Assume ftFloat
+
+    // ... [Atualização dos campos de string e currency] ...
+    CDSPRODUTOS.FieldByName('PrecoCusto').AsCurrency := QRYRKVEND.FieldByName('PrecoCusto').AsCurrency;
+    CDSPRODUTOS.FieldByName('CustoTotal').AsCurrency := QRYRKVEND.FieldByName('CustoTotal').AsCurrency;
+
+    CDSPRODUTOS.FieldByName('Produto').AsString := QRYRKVEND.FieldByName('Produto').AsString;
+    CDSPRODUTOS.FieldByName('Grupo').AsString := QRYRKVEND.FieldByName('Grupo').AsString;
+    CDSPRODUTOS.FieldByName('Marca').AsString := QRYRKVEND.FieldByName('Marca').AsString;
+    CDSPRODUTOS.FieldByName('Fornecedor').AsString := QRYRKVEND.FieldByName('Fornecedor').AsString;
+    CDSPRODUTOS.FieldByName('Localizacao').AsString := QRYRKVEND.FieldByName('Localizacao').AsString;
+    CDSPRODUTOS.FieldByName('Periodo').AsString := PeriodoStr;
+
+  end
+  else
+  begin
+    // =========================================================
+    // REGISTRO NÃO ENCONTRADO: Entra em Inserção (Cria Novo)
+    // =========================================================
+    Operacao := 'Inserido';
+    CDSPRODUTOS.Append;
+
+    // 4B. Cópia Completa dos Campos
+
+    // ATENÇÃO: Se os campos Estoque e QuantidadeVendida foram alterados para ftFloat,
+    // Mantenha AsFloat aqui.
+    CDSPRODUTOS.FieldByName('PrecoCusto').AsCurrency := QRYRKVEND.FieldByName('PrecoCusto').AsCurrency;
+    CDSPRODUTOS.FieldByName('CustoTotal').AsCurrency := QRYRKVEND.FieldByName('CustoTotal').AsCurrency;
+
+    CDSPRODUTOS.FieldByName('Estoque').AsFloat := EstoqueAtual;
+    CDSPRODUTOS.FieldByName('QuantidadeVendida').AsFloat := QRYRKVEND.FieldByName('QuantidadeVendida').AsFloat; // Assume ftFloat
+
+    // Campos de String (Chaves e Descrições)
+    CDSPRODUTOS.FieldByName('CodInterno').AsString := CodInternoAtual;
+    CDSPRODUTOS.FieldByName('CodFornecedor').AsString := QRYRKVEND.FieldByName('CodFornecedor').AsString;
+    CDSPRODUTOS.FieldByName('Produto').AsString := QRYRKVEND.FieldByName('Produto').AsString;
+    CDSPRODUTOS.FieldByName('Grupo').AsString := QRYRKVEND.FieldByName('Grupo').AsString;
+    CDSPRODUTOS.FieldByName('Marca').AsString := QRYRKVEND.FieldByName('Marca').AsString;
+    CDSPRODUTOS.FieldByName('Fornecedor').AsString := QRYRKVEND.FieldByName('Fornecedor').AsString;
+    CDSPRODUTOS.FieldByName('Localizacao').AsString := QRYRKVEND.FieldByName('Localizacao').AsString;
+    CDSPRODUTOS.FieldByName('Periodo').AsString := PeriodoStr;
+  end;
+
+  try
+    // 5. Salva os Campos de Inventário (Comum para Edição e Inserção)
+    // MUDANÇA: Atribuição usando AsFloat
+    CDSPRODUTOS.FieldByName('Contagem').AsFloat := Contagem;
+
+    // MUDANÇA: Cálculo da Diferença usando AsFloat
+    CDSPRODUTOS.FieldByName('Diferenca').AsFloat := EstoqueAtual - Contagem;
+
+    // 6. Finaliza a Operação
+    CDSPRODUTOS.Post;
+
+  except
+    // 7. Em caso de erro, cancela a operação
+    CDSPRODUTOS.Cancel;
+    raise;
+  end;
+
+
+
+
+
+
+
+  // 8. Preparação para o Próximo Produto
+  Editcontagem.Text := '';
+  Labeldiferença.Caption := '';
+
+  // ATENÇÃO: Garanta que CalcularETotalizar existe e faz o que precisa (soma os totais)
+  // Se o QRYRKVEND.Eof, o cálculo deve ocorrer, mas se não for Eof, pode ser desnecessário recalcular a cada item.
+  // Vou manter o cálculo para cada item, pois pode ser que você use o total parcial na tela.
+  if Assigned(CDSTOTAIS) then // Adiciona verificação de existência do CDSTOTAIS
+      CalcularETotalizar;
+
+  Editcontagem.SetFocus; // Mantido para usabilidade
+
+  QRYRKVEND.Next;
+
+  if QRYRKVEND.Eof then
+    ShowMessage('Contagem finalizada. Todos os produtos da lista foram conferidos.');
+
+end;
+
+procedure TRelrkvend.btnconsultaClick(Sender: TObject);
+begin
+RelatorioManual;
+end;
+
+procedure TRelrkvend.BtndownClick(Sender: TObject);
+begin
+  // --- 1. Botão "Descer" (Próximo) ---
+
+  // Verifica se o usuário está na aba de Consulta/Contagem
+  if PageControl1.ActivePage = TabSheet1 then
+  begin
+    // Navega no DataSet de Consulta (QRYRKVEND)
+    if QRYRKVEND.Active then
+    begin
+      // Move para o próximo registro, SE não estiver no final (EOF)
+      if not QRYRKVEND.Eof then
+        QRYRKVEND.Next
+      else
+     //   ShowMessage('Você já está no último produto da lista de consulta.');
+    end
+    else
+    //  ShowMessage('A consulta de produtos não está ativa. Clique em Consultar primeiro.');
+  end
+
+  // Verifica se o usuário está na aba de Resultados/Diferenças
+  else if PageControl1.ActivePage = TabSheet2 then
+  begin
+    // Navega no ClientDataSet de Resultados (CDSPRODUTOS)
+    if CDSPRODUTOS.Active then
+    begin
+      // Move para o próximo registro, SE não estiver no final (EOF)
+      if not CDSPRODUTOS.Eof then
+        CDSPRODUTOS.Next
+      else
+      //  ShowMessage('Você já está no último produto da lista de resultados.');
+    end
+    else
+    //  ShowMessage('A lista de resultados não está ativa.');
+  end;
+end;
+
+
+
+procedure TRelrkvend.btnrelacorretoClick(Sender: TObject);
+const
+  // Define a expressão de filtro para exibir apenas valores com diferença zero
+  FILTRO_DIFERENCA_ZERO = 'Diferenca = 0';
+begin
+  // 1. Garante que o ClientDataSet está aberto
+  if not CDSPRODUTOS.Active then
+    CDSPRODUTOS.Open;
+
+  // 2. Verifica se há dados no ClientDataSet
+  if CDSPRODUTOS.RecordCount = 0 then
+  begin
+    ShowMessage('Não há registros de contagem confirmados no inventário para gerar o relatório.');
+    Exit;
+  end;
+
+  // 3. Garante a ligação do frxDBDataset (se já não estiver em design-time)
+  if DBPRODUTOS.DataSet = nil then
+    DBPRODUTOS.DataSet := CDSPRODUTOS;
+
+  // 4. Salva o estado e aplica o filtro
+  try
+    // Desabilita controles para evitar flicker ou reposicionamento na tela
+    CDSPRODUTOS.DisableControls;
+
+    // Aplica o filtro: apenas onde a diferença é zero
+    CDSPRODUTOS.Filter := FILTRO_DIFERENCA_ZERO;
+    CDSPRODUTOS.Filtered := True;
+
+    // Verifica se há registros após o filtro
+    if CDSPRODUTOS.RecordCount = 0 then
+    begin
+      ShowMessage('Não foram encontrados registros conferidos sem diferença para gerar o relatório.');
+      Exit;
+    end;
+
+    // 5. CALCULA OS TOTAIS DO DATASET FILTRADO
+    // Chama a totalização para que o CDSTOTAIS reflita o total (que será zero para Diferenca e ValorDiferenca)
+    CalcularETotalizar;
+
+    // 6. Gera a pré-visualização ou impressão do relatório
+    FRXRAKVEND.ShowReport;
+
+  finally
+    // 7. Remove o filtro para restaurar a visualização completa
+    CDSPRODUTOS.Filtered := False;
+    CDSPRODUTOS.Filter := '';
+    CDSPRODUTOS.EnableControls;
+
+    // Recalcula o total GERAL após remover o filtro (se o CDSTOTAIS for usado fora do relatório)
+    CalcularETotalizar;
+  end;
+end;
+
+
+procedure TRelrkvend.btnrelatnegativoClick(Sender: TObject);
+const
+  // Define a expressão de filtro para exibir apenas valores negativos
+  FILTRO_VALOR_NEGATIVO = 'Diferenca < 0';
+begin
+  // 1. Garante que o ClientDataSet está aberto
+  // (Assume-se que a estrutura já foi criada, como no FormShow)
+  if not CDSPRODUTOS.Active then
+    CDSPRODUTOS.Open;
+
+  // 2. Verifica se há dados no ClientDataSet
+  if CDSPRODUTOS.RecordCount = 0 then
+  begin
+    ShowMessage('Não há registros de contagem confirmados no inventário para gerar o relatório.');
+    Exit;
+  end;
+
+  // 3. Garante a ligação do frxDBDataset (se já não estiver em design-time)
+  if DBPRODUTOS.DataSet = nil then
+    DBPRODUTOS.DataSet := CDSPRODUTOS;
+
+  // 4. Salva o estado e aplica o filtro
+  try
+    // Desabilita controles para evitar flicker ou reposicionamento na tela
+    CDSPRODUTOS.DisableControls;
+
+    // Aplica o filtro para mostrar apenas ValorDiferenca negativo
+    CDSPRODUTOS.Filter := FILTRO_VALOR_NEGATIVO;
+    CDSPRODUTOS.Filtered := True;
+
+    // Verifica se há registros após o filtro
+    if CDSPRODUTOS.RecordCount = 0 then
+    begin
+      ShowMessage('Não foram encontrados registros com Valor da Diferença negativo (sobras) para gerar o relatório.');
+      Exit;
+    end;
+    CalcularETotalizar;
+    // 5. Gera a pré-visualização ou impressão do relatório
+    // O FastReport usará o dataset filtrado
+    FRXRAKVEND.ShowReport;
+
+  finally
+    // 6. Remove o filtro para restaurar a visualização completa
+    CDSPRODUTOS.Filtered := False;
+    CDSPRODUTOS.Filter := '';
+    CDSPRODUTOS.EnableControls;
+     CalcularETotalizar;
+  end;
+end;
+
+
+
+procedure TRelrkvend.btnRelatPositivoClick(Sender: TObject);
+const
+  // Define a expressão de filtro para exibir apenas valores positivos
+  FILTRO_VALOR_POSITIVO = 'Diferenca > 0';
+begin
+  // 1. Garante que a estrutura foi criada e o ClientDataSet está aberto
+  if CDSPRODUTOS.FieldDefs.Count = 0 then
+    CriarEstruturaManualCDS;
+
+  if not CDSPRODUTOS.Active then
+    CDSPRODUTOS.Open;
+
+  // 2. Verifica se há dados no ClientDataSet para relatar
+  if CDSPRODUTOS.RecordCount = 0 then
+  begin
+    ShowMessage('Não há registros de contagem confirmados no inventário para gerar o relatório.');
+    Exit;
+  end;
+
+  // 3. Garante a ligação do frxDBDataset (se já não estiver em design-time)
+  if DBPRODUTOS.DataSet = nil then
+    DBPRODUTOS.DataSet := CDSPRODUTOS;
+
+  // 4. Salva o estado e aplica o filtro
+  try
+    // Armazena a posição atual, caso o filtro afete a visualização
+    CDSPRODUTOS.DisableControls;
+
+    // Aplica o filtro para mostrar apenas ValorDiferenca positivo
+    CDSPRODUTOS.Filter := FILTRO_VALOR_POSITIVO;
+    CDSPRODUTOS.Filtered := True;
+
+    // Verifica se há registros após o filtro
+    if CDSPRODUTOS.RecordCount = 0 then
+    begin
+      ShowMessage('Não foram encontrados registros com Valor da Diferença positivo para gerar o relatório.');
+      Exit;
+    end;
+    CalcularETotalizar;
+    // 5. Gera a pré-visualização ou impressão do relatório
+    // NOTA: O FastReport (frxReport) usará o dataset filtrado
+    FRXRAKVEND.ShowReport;
+
+  finally
+    // 6. Remove o filtro para restaurar a visualização completa
+    CDSPRODUTOS.Filtered := False;
+    CDSPRODUTOS.Filter := '';
+    CDSPRODUTOS.EnableControls;
+    CalcularETotalizar;
+  end;
+end;
+
+
+
+
+
+
+
+
+
+procedure TRelrkvend.btnupClick(Sender: TObject);
+begin
+  // --- 1. Botão "Subir" (Anterior) ---
+
+  if PageControl1.ActivePage = TabSheet1 then
+  begin
+    // Se estiver na primeira aba (Consulta/Contagem): Navega na QRYRKVEND
+    if QRYRKVEND.Active then
+    begin
+      if not QRYRKVEND.Bof then
+        QRYRKVEND.Prior // Move para o registro anterior
+      else
+     //   ShowMessage('Você já está no primeiro produto da lista de consulta.');
+    end
+    else
+    //  ShowMessage('A consulta de produtos não está ativa.');
+  end
+  else if PageControl1.ActivePage = TabSheet2 then
+  begin
+    // Se estiver na segunda aba (Resultados/Diferenças): Navega no CDSPRODUTOS
+    if CDSPRODUTOS.Active then
+    begin
+      if not CDSPRODUTOS.Bof then
+        CDSPRODUTOS.Prior // Move para o registro anterior
+      else
+       // ShowMessage('Você já está no primeiro produto da lista de resultados.');
+    end
+    else
+  //    ShowMessage('A lista de resultados não está ativa.');
+  end;
+end;
+
+
+
+
+procedure TRelrkvend.CarregarGrupos;
+begin
+  // Garante que a conexão do componente QRYGRUPOS está ativa
+  if not qrygrupos.Connection.Connected then
+    qrygrupos.Connection.Connected := True;
+
+  // Limpa o ComboBox
+  cmbgrupo.Items.Clear;
+
+  // Adiciona a opção "Todos" com o valor 0
+  cmbgrupo.Items.AddObject('Todos', TObject(0));
+
+  // Abre a query para carregar os dados
+  qrygrupos.Open;
+  try
+    // Popula o ComboBox com os dados
+    while not qrygrupos.Eof do
+    begin
+      // Adiciona o nome do setor (texto visível) e guarda o controle (objeto)
+      cmbgrupo.Items.AddObject(qrygrupos.FieldByName('Setor').AsString, TObject(qrygrupos.FieldByName('Controle').AsInteger));
+      qrygrupos.Next;
+    end;
+  finally
+    // Fecha a query para liberar recursos
+    qrygrupos.Close;
+  end;
+
+  // Seleciona a primeira opção ("Todos") por padrão
+  cmbgrupo.ItemIndex := 0;
+end;
+
+
+procedure TRelrkvend.CarregarMarcas;
+var
+  Marca: string;
+begin
+  // Garante que a conexão do componente QRYMARCA está ativa
+  if not qrymarca.Connection.Connected then
+    qrymarca.Connection.Connected := True;
+
+  // Limpa o ComboBox
+  cmbmarca.Items.Clear;
+
+  // Adiciona a opção "Todos"
+  cmbmarca.Items.AddObject('Todos', TObject(0));
+
+  // Define a consulta SQL para buscar fabricantes únicos e não nulos
+  // A propriedade 'Sql.Text' do seu QRYMARCA deve ser configurada da seguinte forma:
+  // 'SELECT DISTINCT FABRICANTE FROM tabest1 WHERE FABRICANTE IS NOT NULL AND FABRICANTE <> '' ORDER BY FABRICANTE'
+  // Abre a query para carregar os dados
+  qrymarca.Open;
+  try
+    // Popula o ComboBox com os dados
+    while not qrymarca.Eof do
+    begin
+      Marca := qrymarca.FieldByName('FABRICANTE').AsString;
+      // Adiciona a marca (texto visível) e guarda a mesma string como objeto
+      cmbmarca.Items.AddObject(Marca, TObject(Marca));
+      qrymarca.Next;
+    end;
+  finally
+    // Fecha a query para liberar recursos
+    qrymarca.Close;
+  end;
+
+  // Seleciona a primeira opção ("Todos") por padrão
+  cmbmarca.ItemIndex := 0;
+end;
+
+
+
+procedure TRelrkvend.CDSPRODUTOSCalcFields(DataSet: TDataSet);
+var
+  PrecoCusto: Currency;
+  Diferenca: Integer;
+begin
+  // Verificação de segurança para evitar erros se os campos estiverem nulos
+  if DataSet.FieldByName('Diferenca').IsNull or DataSet.FieldByName('PrecoCusto').IsNull then
+  begin
+    DataSet.FieldByName('ValorDiferenca').AsCurrency := 0;
+    Exit;
+  end;
+
+  // 1. Pega os valores necessários
+  PrecoCusto := DataSet.FieldByName('PrecoCusto').AsCurrency;
+  Diferenca := DataSet.FieldByName('Diferenca').AsInteger;
+
+  // 2. Calcula o valor financeiro da diferença
+  // Se a Diferenca for positiva (Estoque > Contagem), é um prejuízo (perda).
+  // Se a Diferenca for negativa (Estoque < Contagem), é um ganho.
+  DataSet.FieldByName('ValorDiferenca').AsCurrency := PrecoCusto * Diferenca;
+end;
+
+
+
+procedure TRelrkvend.EditcontagemChange(Sender: TObject);
+var
+  Estoque, Contagem, Diferenca: Real;
+begin
+  if QRYRKVEND.State in [dsBrowse, dsEdit, dsInsert] then
+  begin
+    try
+      // Lê os valores
+      Estoque := QRYRKVEND.FieldByName('Estoque').AsFloat;
+      Contagem := StrToFloatDef(Editcontagem.Text, 0.0);
+
+      // Nova lógica: contagem - estoque
+      Diferenca := Contagem - Estoque;
+
+      // Exibe a diferença com sinal
+      Labeldiferença.Caption := FormatFloat('0.00', Diferenca);
+
+      // Feedback visual
+      if Diferenca < 0 then
+        Labeldiferença.Font.Color := clRED  // Está faltando
+      else if Diferenca > 0 then
+        Labeldiferença.Font.Color := clGREEN   // Está sobrando
+      else
+        Labeldiferença.Font.Color := clWHITE ; // Está certo
+
+    except
+      Labeldiferença.Caption := 'ERRO';
+      Labeldiferença.Font.Color := clRed;
+    end;
+  end
+  else
+    Labeldiferença.Caption := '';
+end;
+
+
+
+
+
+
+procedure TRelrkvend.EditcontagemKeyPress(Sender: TObject; var Key: Char);
+var
+  DecimalSeparator: Char;
+begin
+  // Obtém o separador decimal do sistema (geralmente ',' no Português-BR)
+  DecimalSeparator := FormatSettings.DecimalSeparator;
+
+  // 1. Permite os dígitos de 0 a 9
+  if (Key >= '0') and (Key <= '9') then
+    Exit; // Tecla aceita
+
+  // 2. Permite a tecla de Backspace (para apagar)
+  if Key = #8 then
+    Exit; // Tecla aceita
+
+  // 3. Permite o separador decimal do sistema (Ponto ou Vírgula)
+  // Verifica se a chave pressionada é o separador E se ele ainda não existe no texto
+  if (Key = DecimalSeparator) or (Key = '.') then // Permitir ponto também, comum no teclado numérico
+  begin
+    // Se o separador (vírgula ou ponto) já existe, a tecla é rejeitada
+    if Pos(DecimalSeparator, Editcontagem.Text) > 0 then
+    begin
+      Key := #0; // Rejeita a tecla (já existe separador)
+      Exit;
+    end;
+
+    // Se for um ponto e o separador é vírgula, converte o ponto para vírgula
+    if (Key = '.') and (DecimalSeparator = ',') then
+      Key := DecimalSeparator;
+
+    Exit; // Tecla aceita (primeiro separador)
+  end;
+
+  // 4. Se a tecla não se encaixa em nenhuma das condições acima, ela é rejeitada.
+  Key := #0; // Rejeita a tecla (bloqueia letras e caracteres especiais)
+
+  // Opcional: Tocar um som para indicar rejeição
+  MessageBeep(0);
+end;
+
+
+procedure TRelrkvend.CarregarFornecedores;
+begin
+  // Garante que a conexão do componente QRYFORNECEDOR está ativa
+  if not qryfornecedor.Connection.Connected then
+    qryfornecedor.Connection.Connected := True;
+
+  // Limpa o ComboBox
+  cmbfornecedor.Items.Clear;
+
+  // Adiciona a opção "Todos" com o valor 0
+  cmbfornecedor.Items.AddObject('Todos', TObject(0));
+
+  // Define a consulta SQL do seu QRYFORNECEDOR
+  // A propriedade 'Sql.Text' do seu QRYFORNECEDOR deve ser configurada da seguinte forma:
+  // 'SELECT Controle, Empresa FROM tabfor ORDER BY Empresa'
+  // Abre a query para carregar os dados
+  qryfornecedor.Open;
+  try
+    // Popula o ComboBox com os dados
+    while not qryfornecedor.Eof do
+    begin
+      // Adiciona o nome da empresa (texto visível) e guarda o controle (objeto)
+      cmbfornecedor.Items.AddObject(qryfornecedor.FieldByName('Empresa').AsString, TObject(qryfornecedor.FieldByName('Controle').AsInteger));
+      qryfornecedor.Next;
+    end;
+  finally
+    // Fecha a query para liberar recursos
+    qryfornecedor.Close;
+  end;
+
+  // Seleciona a primeira opção ("Todos") por padrão
+  cmbfornecedor.ItemIndex := 0;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+procedure TRelrkvend.FormShow(Sender: TObject);
+begin
+dtinicio.DateTime:=now;
+dtfim.DateTime:=now;
+
+CarregarGrupos;
+CarregarMarcas;
+CarregarFornecedores;
+CriarEstruturaManualCDS;
+PageControl1.ActivePage := TabSheet1;
+Labelconferido.Visible := False;
+end;
+
+
+
+
+
+
+
+
+
+
+
+procedure TRelrkvend.QRYRKVENDAfterScroll(DataSet: TDataSet);
+var
+  CodInterno: string;
+begin
+  // 1. Verifica se o componente de feedback existe
+  // ATENÇÃO: Substitua 'Labelconferido' pelo nome real do seu componente de Label
+  if not Assigned(Labelconferido) then Exit;
+
+  // 2. Garante que estamos na aba correta (onde o QRYRKVEND está visível)
+  if PageControl1.ActivePage <> TabSheet1 then
+  begin
+    // Se a aba não for a de consulta, podemos simplesmente sair
+    Labelconferido.Visible := False;
+    Exit;
+  end;
+
+  // 3. Lê o CodInterno do produto atual
+  CodInterno := DataSet.FieldByName('CodInterno').AsString;
+
+  // 4. Verifica se o ClientDataSet de conferidos está ativo e localiza o produto
+  if CDSPRODUTOS.Active and CDSPRODUTOS.Locate('CodInterno', CodInterno, [loCaseInsensitive]) then
+  begin
+    // Produto CONFERIDO
+    Labelconferido.Caption := 'PRODUTO JÁ CONFERIDO!';
+    Labelconferido.Font.Color := clblack;
+    Labelconferido.Visible := True;
+  end
+  else
+  begin
+    // Produto NÃO CONFERIDO
+    Labelconferido.Caption := ''; // Limpa o texto
+    Labelconferido.Visible := FALSE;
+  end;
+end;
+
+
+
+procedure TRelrkvend.RelatorioManual;
+var
+  SQLText: TStringList;
+begin
+  SQLText := TStringList.Create;
+  try
+    SQLText.Add('SELECT');
+    SQLText.Add('  P.CodInterno,');
+    SQLText.Add('  P.Codfornecedor,');
+    SQLText.Add('  P.Produto,');
+    SQLText.Add('  G.Setor AS Grupo,');
+    SQLText.Add('  P.Fabricante AS Marca,');
+    SQLText.Add('  F.Empresa AS Fornecedor,');
+    SQLText.Add('  P.Quantidade AS Estoque,');
+    SQLText.Add('  SUM(I.QtdReal) AS QuantidadeVendida,');
+    SQLText.Add('  P.Unidade,');
+    SQLText.Add('  P.Moeda AS Localizacao,');
+
+    SQLText.Add('  P.PrecoCusto,'); // Custo unitário
+    SQLText.Add('  P.Quantidade * P.PrecoCusto AS CustoTotal'); // Custo total do ESTOQUE
+
+    SQLText.Add('FROM tabest3b I WITH (NOLOCK)');
+    SQLText.Add('LEFT JOIN tabest1 P WITH (NOLOCK) ON I.lkProduto = P.controle');
+    SQLText.Add('LEFT JOIN tabest3a V WITH (NOLOCK) ON I.pedido = V.pedido');
+    SQLText.Add('LEFT JOIN tabest8 G WITH (NOLOCK) ON P.lkSetor = G.Controle');
+    SQLText.Add('LEFT JOIN tabfor F WITH (NOLOCK) ON P.lkfornec = F.Controle');
+    SQLText.Add('WHERE CAST(REPLACE(ISNULL(I.Total, ''0''), '','', ''.'') AS DECIMAL(18, 2)) > 0');
+    SQLText.Add('  AND V.Cancelada <> 1');
+    SQLText.Add('  AND V.Venda = 1');
+    SQLText.Add('  AND V.Status = ''V''');
+    SQLText.Add('  AND I.DataInc >= :DataInicio');
+    SQLText.Add('  AND I.DataInc <= :DataFim');
+    SQLText.Add('  AND P.naosaitabela = 0');
+
+    if cmbgrupo.ItemIndex > 0 then
+      SQLText.Add('  AND G.Controle = :Grupo');
+
+    if cmbfornecedor.ItemIndex > 0 then
+      SQLText.Add('  AND F.Controle = :Fornecedor');
+
+    if cmbmarca.ItemIndex > 0 then
+      SQLText.Add('  AND P.Fabricante = :Marca');
+
+    if Trim(editlocal.Text) <> '' then
+      SQLText.Add('  AND P.Moeda = :Localizacao');
+
+    SQLText.Add('GROUP BY');
+
+    // **CAMPOS DE CUSTO INCLUÍDOS NO GROUP BY**
+    // (P.Quantidade * P.PrecoCusto não precisa ser incluído, mas P.PrecoCusto, sim)
+    SQLText.Add('  P.CodInterno, P.Codfornecedor, P.Produto, G.Setor, P.Fabricante, F.Empresa,');
+    SQLText.Add('  P.Quantidade, P.Unidade, P.Moeda, P.PrecoCusto');
+
+    SQLText.Add('ORDER BY SUM(I.QtdReal) DESC');
+
+    QRYRKVEND.Close;
+    QRYRKVEND.Params.Clear;
+    QRYRKVEND.SQL.Text := SQLText.Text;
+
+    QRYRKVEND.ParamByName('DataInicio').AsDateTime := dtinicio.Date;
+    QRYRKVEND.ParamByName('DataFim').AsDateTime := dtfim.Date;
+
+    if cmbgrupo.ItemIndex > 0 then
+      QRYRKVEND.ParamByName('Grupo').AsInteger := Integer(cmbgrupo.Items.Objects[cmbgrupo.ItemIndex]);
+
+    if cmbfornecedor.ItemIndex > 0 then
+      QRYRKVEND.ParamByName('Fornecedor').AsInteger := Integer(cmbfornecedor.Items.Objects[cmbfornecedor.ItemIndex]);
+
+    if cmbmarca.ItemIndex > 0 then
+      QRYRKVEND.ParamByName('Marca').AsString := cmbmarca.Items[cmbmarca.ItemIndex];
+
+    if Trim(editlocal.Text) <> '' then
+      QRYRKVEND.ParamByName('Localizacao').AsString := Trim(editlocal.Text);
+
+    try
+      QRYRKVEND.Open;
+      Dbgridprodutos.DataSource := dsQRYRKVEND;
+    finally
+      // Mantém a query aberta para visualização no grid
+    end;
+  finally
+    SQLText.Free;
+  end;
+end;
+
+
+
+
+
+
+
+
+procedure TRelrkvend.CriarEstruturaManualCDS;
+var
+  IndexDef: TIndexDef;
+begin
+  // 1. Limpeza da estrutura anterior
+  CDSPRODUTOS.Close;
+  CDSPRODUTOS.FieldDefs.Clear;
+  CDSPRODUTOS.IndexDefs.Clear;
+
+  // 2. Definição dos campos
+  with CDSPRODUTOS.FieldDefs do
+  begin
+    Add('CodInterno', ftString, 20, False);
+    Add('Codfornecedor', ftString, 30, False);
+    Add('Produto', ftString, 100, False);
+    Add('Grupo', ftString, 50, False);
+    Add('Marca', ftString, 50, False);
+    Add('Fornecedor', ftString, 100, False);
+    Add('Localizacao', ftString, 30, False);
+    Add('Periodo', ftString, 80, False);
+    Add('Estoque', ftFloat);
+    Add('QuantidadeVendida', ftInteger);
+    Add('PrecoCusto', ftCurrency);
+    Add('CustoTotal', ftCurrency);
+    Add('Contagem', ftInteger);
+    Add('Diferenca', ftInteger);
+    Add('ValorDiferenca', ftCurrency);
+  end;
+
+  // 3. Criação do DataSet
+  CDSPRODUTOS.CreateDataSet;
+
+
+
+  // 5. Criação do índice primário
+  IndexDef := CDSPRODUTOS.IndexDefs.AddIndexDef;
+  IndexDef.Name := 'IdxCodInterno';
+  IndexDef.Fields := 'CodInterno';
+  IndexDef.Options := [ixPrimary];
+  CDSPRODUTOS.IndexName := 'IdxCodInterno';
+
+  // 6. Ativação dos agregados
+  CDSPRODUTOS.AggregatesActive := True;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+procedure TRelrkvend.CalcularETotalizar;
+var
+  TotalCusto: Currency;
+  TotalDiferenca: Currency;
+begin
+  // 1. Garante que o ClientDataSet principal está ativo
+  if not CDSPRODUTOS.Active then
+    Exit;
+
+  // Verifica se a estrutura do CDSTOTAIS já existe
+  if CDSTOTAIS.FieldDefs.Count = 0 then
+  begin
+    // Se a estrutura não existe (apenas na primeira chamada), crie-a
+    CDSTOTAIS.Close;
+    with CDSTOTAIS.FieldDefs.AddFieldDef do
+      begin Name := 'TOTALCUSTO'; DataType := ftCurrency; end;
+    with CDSTOTAIS.FieldDefs.AddFieldDef do
+      begin Name := 'TOTALDIFERENCA'; DataType := ftCurrency; end;
+    CDSTOTAIS.CreateDataSet;
+  end;
+
+  // 2. Limpa o registro existente no CDSTOTAIS (Evita a criação da estrutura a cada chamada)
+  if CDSTOTAIS.Active then
+    CDSTOTAIS.EmptyDataSet // Limpa o conteúdo (um único registro)
+  else
+    CDSTOTAIS.Open;
+
+
+  // 3. Calcula os Totais Percorrendo o CDSPRODUTOS (Obrigatoriamente!)
+  // ATENÇÃO: Se o CDSPRODUTOS estiver FILTRADO (nos relatórios),
+  // ele só percorrerá os registros visíveis, o que é o comportamento desejado.
+  TotalCusto := 0;
+  TotalDiferenca := 0;
+
+  CDSPRODUTOS.First;
+  while not CDSPRODUTOS.Eof do
+  begin
+    // Soma o custo total de estoque de cada produto (CustoTotal)
+    TotalCusto := TotalCusto + CDSPRODUTOS.FieldByName('CustoTotal').AsCurrency;
+
+    // Soma o valor da diferença de cada produto (ValorDiferenca)
+    TotalDiferenca := TotalDiferenca + CDSPRODUTOS.FieldByName('ValorDiferenca').AsCurrency;
+
+    CDSPRODUTOS.Next;
+  end;
+
+  // 4. Salva o Resultado no CDSTOTAIS
+  CDSTOTAIS.Append;
+  CDSTOTAIS.FieldByName('TOTALCUSTO').AsCurrency := TotalCusto;
+  CDSTOTAIS.FieldByName('TOTALDIFERENCA').AsCurrency := TotalDiferenca;
+  CDSTOTAIS.Post;
+
+  // Reposiciona o CDSPRODUTOS no início (boas práticas)
+  CDSPRODUTOS.First;
+end;
+
+
+
+procedure TRelrkvend.TeclaClick(Sender: TObject);
+var
+  Botao: TBitBtn;
+  Caractere: Char;
+  Captura: String;
+  SeparadorDecimal: Char;
+begin
+  // 1. Identifica o botão clicado
+  if not (Sender is TBitBtn) then Exit;
+  Botao := Sender as TBitBtn;
+  Captura := UpperCase(Trim(Botao.Caption)); // Pega o Caption em maiúsculo e limpo
+
+  // 2. Garante que o EditContagem está ativo
+  Editcontagem.SetFocus;
+
+  // 3. Lógica por Ação
+
+  if (Length(Captura) = 1) and (Captura[1] in ['0'..'9']) then
+  begin
+    // Ação: Inserir Dígito (0 a 9)
+    Editcontagem.Text := Editcontagem.Text + Captura;
+  end
+  else if (Captura = ',') or (Captura = '.') then
+  begin
+    // Ação: Inserir Separador Decimal
+    SeparadorDecimal := FormatSettings.DecimalSeparator;
+
+    // Verifica se o separador já existe
+    if Pos(SeparadorDecimal, Editcontagem.Text) = 0 then
+    begin
+      // Insere o separador do sistema (',' ou '.')
+      Editcontagem.Text := Editcontagem.Text + SeparadorDecimal;
+    end;
+  end
+  else if Captura = 'DEL' then
+  begin
+    // Ação: Apagar o Último Caractere
+    if Length(Editcontagem.Text) > 0 then
+    begin
+      Editcontagem.Text := Copy(Editcontagem.Text, 1, Length(Editcontagem.Text) - 1);
+    end;
+  end
+  else if Captura = 'CONFIRMAR' then
+  begin
+    // Ação: Confirma a Contagem (Chama a procedure principal)
+    btnconfirmaClick(Sender);
+  end
+  else if Captura = 'SAIR' then
+  begin
+    // Ação: Sair do Formulário
+    Close;
+  end;
+
+  // O evento OnChange do Editcontagem cuidará da checagem da diferença.
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+end.

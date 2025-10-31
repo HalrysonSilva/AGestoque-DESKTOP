@@ -1,0 +1,17 @@
+COLUMN_NAME	DATA_TYPE
+idControle	int
+IdEmpresa	int
+Data	datetime
+Pedido	int
+LkItem	int
+CodInterno	varchar
+Quantidade	float
+SaldoAnterior	float
+Saldo	float
+LkOperacao	int
+LkVarejo	int
+LkUsuario	int
+LkTipo	int
+Hora	varchar
+Terminal	varchar
+LkCliFor	int

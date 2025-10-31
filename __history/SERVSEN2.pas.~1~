@@ -1,0 +1,442 @@
+{ Titulo     : ServSIC - SISTEMA INTEGRADO COMERCIAL
+  Data       : 26/05/02
+  Programa   : SERVsen.PAS
+  Comentario : Senha de acesso }
+
+unit SERVSEN2;
+
+interface
+
+uses
+  SysUtils, WinTypes, WinProcs, Messages, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, DBTables, ExtCtrls, StdCtrls, dbiProcs, jpeg, pngimage, MemDS,
+  DBAccess, ComCtrls, Buttons, Uni, frxClass, AdvGlowButton, dxGDIPlusClasses;
+
+type
+  TSenhaDeAcesso = class(TForm)
+    DataSenha: TDataSource;
+    LbMsg: TLabel;
+    eData: TDateTimePicker;
+    LbTerminal: TLabel;
+    lbCaixa: TLabel;
+    eEmpresa: TComboBox;
+    lbEmpresa: TLabel;
+    Image2: TImage;
+    tableSenha: TUniQuery;
+    tableSenhaControle: TIntegerField;
+    tableSenhaCODSENHA: TWideStringField;
+    tableSenhaUSUARIO: TWideStringField;
+    tableSenhaNIVEL: TWideStringField;
+    tableSenhaORCAMENTO: TWideStringField;
+    tableSenhaPDV: TWideStringField;
+    tableSenhaVENDA: TWideStringField;
+    tableSenhaACESSO_INC: TWideStringField;
+    tableSenhaACESSO_CON: TWideStringField;
+    tableSenhaACESSO_ALT: TWideStringField;
+    tableSenhaACESSO_EXC: TWideStringField;
+    tableSenhaACESSO_REL: TWideStringField;
+    tableSenhaACESSO_UTI: TWideStringField;
+    tableSenhaACESSO_US1: TWideStringField;
+    tableSenhaACESSO_US2: TWideStringField;
+    tableSenhaACESSO_US3: TWideStringField;
+    Panel1: TPanel;
+    Senha: TEdit;
+    LbSenha: TLabel;
+    Operador: TComboBox;
+    LbOperador: TLabel;
+    Button1: TButton;
+    SpeedButton1: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure SenhaDeEntrada;
+    procedure TelaDeBloqueio;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure SenhaEnter(Sender: TObject);
+    procedure SenhaExit(Sender: TObject);
+    procedure OperadorExit(Sender: TObject);
+    procedure OperadorEnter(Sender: TObject);
+    procedure OperadorKeyPress(Sender: TObject; var Key: Char);
+    procedure SenhaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+  private
+    EntraNoSistema: boolean;
+    iCodUsuario : integer;
+    procedure SNH_Acessar;
+    procedure Snh_ValidarAcesso;
+    procedure GravaConfigAcesso;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+  function VerificaSenha(S: string): boolean;
+
+var
+  SenhaDeAcesso: TSenhaDeAcesso;
+  Tentativas: integer;
+  TipoDeJanela: string[1];
+  NomeOperador, UltOperador: string;
+  UltSenha: string;
+
+implementation
+
+{$R *.DFM}
+
+uses
+  ServMtFun, ServDBU, svImgPdv, SvDmDados, svFuncoes;
+
+Function  GravaLog(Acao, Tarefa : string) : boolean; External 'sicarq32.dll';
+procedure TSenhaDeAcesso.SenhaDeEntrada;
+begin
+TipoDeJanela := 'E';
+ShowModal;
+end;
+
+procedure TSenhaDeAcesso.TelaDeBloqueio;
+begin
+  TipoDeJanela := 'B';
+  ShowModal;
+end;
+
+procedure TSenhaDeAcesso.Button1Click(Sender: TObject);
+begin
+
+  Snh_ValidarAcesso;
+
+end;
+
+
+procedure TSenhaDeAcesso.Snh_ValidarAcesso;
+begin
+
+  Snh_Acessar;
+  DmDados.Cfg_Data := edata.Date;
+  Dmdados.IdEmpresa_Seleciona(DmDados.qryEmpresaCodigo.AsInteger);
+
+  if iCodUsuario = 0 then
+  BEGIN
+    iCodUsuario := dmdados.GetCodUsuarioPeloNome(Operador.Text);
+  END;
+
+  DmDados.Usuario_Seleciona(iCodUsuario );
+
+end;
+
+procedure TSenhaDeAcesso.SNH_Acessar;
+begin
+
+  Tentativas := Tentativas + 1;
+
+  if (VerificaSenha( Senha.Text ) = True) or ( ChecaSenhaDia( Senha.Text ) )  then
+  begin
+    if TipoDeJanela = 'B' then
+      begin
+      if not( ( UltOperador = Operador.Text ) and
+        ( UltSenha = Senha.Text ) ) then
+      begin
+        SHOWMESSAGE( 'O acesso só é permitido ao operador corrente.' );
+        exit;
+      end;
+    end
+    else
+    begin
+     { with MenuPrincipal do
+      begin
+        AcessaMenu( Cadastros, Trim( TableSenhaACESSO_INC.Value ) );
+        AcessaMenu( Manutencoes, Trim( TableSenhaACESSO_CON.Value ) );
+        AcessaMenu( Relatorios, Trim( TableSenhaACESSO_REL.Value ) );
+        AcessaMenu( Utilitarios, Trim( TableSenhaACESSO_UTI.Value ) );
+
+        SpeedButton2.Enabled := Calculadora1.Enabled;
+        //SpeedButton4.Enabled := Reorganizacaodearquivos1.Enabled;
+      end;}
+    end;
+    EntraNoSistema := True;
+    GravaConfigAcesso;
+    Close;
+  end
+  else
+  begin
+    if Tentativas < 6 then
+      BEGIN
+      SHOWMESSAGE( 'Senha incorreta, tente novamente.' );
+      Gravalog('ACESSO AO SISTEMA','SENHA INCORRETA!!! ENTRADA DE ACESSO AO SISTEMA - MENU PRINCIPAL');
+      SENHA.Setfocus;
+      END
+    else
+    begin
+      SHOWMESSAGE( 'Senha incorreta.' );
+      Gravalog('ACESSO AO SISTEMA','SENHA INCORRETA!!! ENTRADA DE ACESSO AO SISTEMA - MENU PRINCIPAL');
+
+      if TipoDeJanela <> 'B' then
+        Application.Terminate;
+    end;
+  end;
+//   Gravalog('ACESSO AO SISTEMA','SENHA ENTRADA DE ACESSO AO SISTEMA - MENU PRINCIPAL');
+end;
+
+procedure TSenhaDeAcesso.GravaConfigAcesso;
+begin
+//GRAVA NO TERMINAL
+ iCodUsuario := TableSenhaCOntrole.AsInteger;
+ GRAVASYS('LOGIN','OPERADOR',OPERADOR.Text);
+ GRAVASYS('LOGIN','N_USER',TableSenhaCOntrole.AsString);
+ GRAVASYS('LOGIN','NIVEL',TableSenhaNIVEL.AsString);
+ GRAVASYS('LOGIN','DATA', DateToStr(date));
+ GravaSys('LOGIN','COMPUTADOR', NomeComputador);
+
+//GRAVA NO SERVIDOR
+ GRAVAINI('LOGIN','OPERADOR',OPERADOR.Text);
+ GRAVAINI('LOGIN','N_USER',TableSenhaCOntrole.AsString);
+ GRAVAINI('LOGIN','NIVEL',TableSenhaNIVEL.AsString);
+ GravaINI('LOGIN','DATA', DateToStr(date));
+
+
+IF LERSYS('LOGIN','N_ACESSOS') <= '' THEN
+   GRAVASYS('LOGIN','N_ACESSOS','1');
+   GravaSys('LOGIN','N_Acessos', inttostr(STRTOINT(LERSYS('LOGIN','N_ACESSOS')) + 1));
+   GravaSys('LOGIN','HORA_ENTRADA',TimeToStr(NOW));
+
+end;
+
+
+procedure TSenhaDeAcesso.Image1Click(Sender: TObject);
+begin
+  mensagem(   DmDados.Cx_LerStatus( DmDados.cfg_CxNr,false) );
+end;
+
+procedure TSenhaDeAcesso.Button2Click(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
+procedure TSenhaDeAcesso.FormShow(Sender: TObject);
+begin
+//MenuPrincipal.MainMenu1.Items.Enabled := false;
+TableSenha.CLOSE;
+
+
+
+  lbmsg.Caption :=   'Ultimo Acesso (OPERADOR): ' + lersys('login','operador')
+ + ' |Data: ' + lersys('login','data')
+    + ' às: ' + lersys('login','HORA_ENTRADA');
+
+  TableSenha.Open;
+  UltOperador := Operador.Text;
+  UltSenha := Senha.Text;
+  Operador.Text := '';
+  Senha.Text := '';
+  Tentativas := 0;
+  Operador.Clear;
+  while not TableSenha.EOF do
+      begin
+      Operador.Items.Add(TableSenhaUsuario.AsString);
+      TableSenha.Next;
+     end;
+  Operador.SetFocus;
+  Operador.Text := LERSYS('LOGIN','OPERADOR');
+
+  //Identificação do Terminal
+  DmDados.cfg_TerminalIp  := dmdados.GetIPTerminal;
+  DmDados.cfg_Terminal := dmdados.GetNomeComputador;
+  LbTerminal.Caption := 'Terminal: ' + dmdados.cfg_Terminal + ' (' + DmDados.cfg_TerminalIp + ') BD: ' + DmDados.DadosMS.Database  ;
+
+   SenhaDeAcesso.Caption := 'SENHA DE ACESSO ( versão: ' +  dmdados.cfg_VersaoExe   +')';
+
+ 
+
+end;
+
+function VerificaSenha(S: string): boolean;
+var
+  Resultado: boolean;
+  ST: string;
+begin
+  Resultado := False;
+  with SenhaDeAcesso do
+  begin
+    ST := UpperCase( S );
+    ST := Codifica( ST );
+    TableSenha.First;
+    while not TableSenha.EOF do
+    begin
+      if (TableSenhaCODSENHA.Value = ST) and
+         (TableSenhaUSUARIO.Value = Operador.Text) then
+      begin
+        Resultado := True;
+        NomeOperador := TableSenhaUSUARIO.Value;
+        VerificaSenha := Resultado;
+        Exit;
+      end;
+      Application.ProcessMessages;
+      TableSenha.Next;
+    end;
+  end;
+  VerificaSenha := Resultado;
+end;
+
+procedure TSenhaDeAcesso.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+//MenuPrincipal.MainMenu1.Items.Enabled := true;
+  if EntraNoSistema then
+    TableSenha.Close
+  else
+    Action := caNone;
+end;
+
+procedure TSenhaDeAcesso.FormCreate(Sender: TObject);
+
+begin
+
+  EntraNoSistema := False;
+
+  DmDados.qryEmpresa.Open;
+  DmDados.qryEmpresa.First;
+
+  eEmpresa.Items.Clear;
+  while not   DmDados.qryEmpresa.Eof do
+  begin
+    eEmpresa.Items.Add(DmDados.qryEmpresaRazao_Social.AsString);
+    DmDados.qryEmpresa.Next;
+  end;
+
+  eEmpresa.ItemIndex := 0;
+
+  try
+    DmDados.CxFecha_Seleciona( strtoint('0'+ alltrim(LerSYS('VENDA','CAIXA')) ) );
+    lbCaixa.Caption := 'Caixa: ' + StrZero(DmDados.cfg_CxNr,2) + ' - ' + dmdados.cfg_CxDesc + ' | ' + DmDados.cfg_CxStatus;
+  except
+
+  end;
+
+
+  eData.DateTime := Date;
+
+end;
+procedure TSenhaDeAcesso.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+
+  if key= #13 then
+  begin
+    Perform (CM_DialogKey, VK_TAB, 0);
+    key:=#0;
+  end;
+
+end;
+
+procedure TSenhaDeAcesso.SenhaEnter(Sender: TObject);
+begin
+
+ if (Sender is TEdit) then
+  TEdit(Sender).Color:=ClYellow;
+
+end;
+
+procedure TSenhaDeAcesso.SenhaExit(Sender: TObject);
+begin
+// mudar a cor do componente
+  if (Sender is TEdit) then
+    TEdit(Sender).Color:=clWindow;
+
+end;
+
+procedure TSenhaDeAcesso.OperadorExit(Sender: TObject);
+begin
+// mudar a cor do componente
+  if (Sender is TComboBox) then
+    TComboBox(Sender).Color:=clWindow;
+
+  If TableSenha.Locate('usuario',operador.Text,[loCaseInsensitive, loPartialKey]) then
+    begin
+      Case Tablesenhanivel.AsInteger of
+        0: LbOperador.Caption := 'USUÁRIO: [NIVEL 1 -> OPERADOR]';
+        1: LbOperador.Caption := 'USUÁRIO: [NIVEL 2 -> SUPERVISOR]';
+        2: LbOperador.Caption := 'USUÁRIO: [NIVEL 3 -> GERENTE]';
+      end;
+    end
+  else
+    begin
+      LbOperador.Caption := 'USUÁRIO: ';
+    end;
+
+end;
+
+procedure TSenhaDeAcesso.OperadorEnter(Sender: TObject);
+begin
+
+  if (Sender is TComboBox) then
+  begin
+    TComboBox(Sender).Color := clYellow;
+    TComboBox(Sender).SelectAll;
+  end;
+
+
+
+end;
+
+procedure TSenhaDeAcesso.OperadorKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #27   then
+  begin
+     if Application.MessageBox('Deseja sair do login do PDV?', 'Confirmação',
+       MB_YESNO + MB_ICONQUESTION) = IDYES then
+     begin
+        Application.Terminate;
+     end
+     else
+     begin
+      Operador.SetFocus;
+      Operador.SelectAll;
+     end;
+  end;
+
+end;
+
+procedure TSenhaDeAcesso.SenhaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if key = vk_Return   then
+  begin
+    Snh_ValidarAcesso;
+  end;
+  if key = vk_Escape   then
+  begin
+    Operador.SetFocus;
+    Operador.SelectAll;
+  end;
+
+
+end;
+
+procedure TSenhaDeAcesso.SpeedButton1Click(Sender: TObject);
+begin
+
+  Application.Terminate;
+  {
+   try
+
+  Application.Terminate;
+
+ except
+
+ end;
+
+//finaliza aplicação
+ try
+
+  Application.Terminate;
+
+ except
+
+ end;
+    }
+
+end;
+
+end.
+
