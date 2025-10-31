@@ -83,6 +83,8 @@ type
     DBTOTAIS: TfrxDBDataset;
     frxDBCAB: TfrxDBDataset;
     frxRelatorio: TfrxReport;
+    QRYSELECIONAPRODUTOS: TUniQuery;
+    DSQRYSELECIONAPRODUTO: TDataSource;
 
 
 procedure DataModuleCreate(Sender: TObject); // DataSource para grid

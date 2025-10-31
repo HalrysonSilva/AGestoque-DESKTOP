@@ -248,7 +248,57 @@ type
     DBText48: TDBText;
     DBGridmovestoque: TDBGrid;
     TabSheet8: TTabSheet;
-    TabSheet9: TTabSheet;
+    dsQRYRKVEND: TDataSource;
+    QRYRKVEND: TUniQuery;
+    QRYPRODUTOSABERTOS: TUniQuery;
+    DSQRYPRODUTOSABERTOS: TDataSource;
+    QRYHISTORICO: TUniQuery;
+    QRYHISTORICONUMRELATORIO: TIntegerField;
+    QRYHISTORICODATA_AJUSTE: TDateTimeField;
+    QRYHISTORICOUSUARIO: TStringField;
+    QRYHISTORICOLKUSUARIO: TIntegerField;
+    QRYHISTORICOTOTAL_CUSTO_DIF: TCurrencyField;
+    QRYHISTORICOPERIODO_INICIO: TDateField;
+    QRYHISTORICOPERIODO_FIM: TDateField;
+    QRYHISTORICOGRUPO_FILTRO: TStringField;
+    QRYHISTORICOMARCA_FILTRO: TStringField;
+    QRYHISTORICOFORNECEDOR_FILTRO: TStringField;
+    QRYHISTORICOLOCALIZACAO_FILTRO: TStringField;
+    QRYHISTORICOSTATUS: TBooleanField;
+    DSQRYHISTORICO: TDataSource;
+    PageControl3: TPageControl;
+    TabSheet6: TTabSheet;
+    Panel30: TPanel;
+    btnconsultaprodutos: TButton;
+    Labelproduto: TLabel;
+    Panel55: TPanel;
+    Panel56: TPanel;
+    Label94: TLabel;
+    Edit1: TEdit;
+    Panel57: TPanel;
+    Label95: TLabel;
+    Edit2: TEdit;
+    Panel58: TPanel;
+    Label96: TLabel;
+    Edit3: TEdit;
+    Panel59: TPanel;
+    Label97: TLabel;
+    Edit4: TEdit;
+    Panel60: TPanel;
+    Label98: TLabel;
+    Edit5: TEdit;
+    Panel61: TPanel;
+    Label99: TLabel;
+    Edit6: TEdit;
+    Panel62: TPanel;
+    Label100: TLabel;
+    Edit7: TEdit;
+    Panel63: TPanel;
+    Label101: TLabel;
+    Edit8: TEdit;
+    RadioGroup1: TRadioGroup;
+    Label102: TLabel;
+    TabSheet10: TTabSheet;
     Label76: TLabel;
     Panel31: TPanel;
     Label77: TLabel;
@@ -292,24 +342,47 @@ type
     CEPRECOVAREJO2: TCurrencyEdit;
     CEPRECOVAREJO1: TCurrencyEdit;
     DBGRIDPRODUTOSBASE: TDBGrid;
-    dsQRYRKVEND: TDataSource;
-    QRYRKVEND: TUniQuery;
-    QRYPRODUTOSABERTOS: TUniQuery;
-    DSQRYPRODUTOSABERTOS: TDataSource;
-    QRYHISTORICO: TUniQuery;
-    QRYHISTORICONUMRELATORIO: TIntegerField;
-    QRYHISTORICODATA_AJUSTE: TDateTimeField;
-    QRYHISTORICOUSUARIO: TStringField;
-    QRYHISTORICOLKUSUARIO: TIntegerField;
-    QRYHISTORICOTOTAL_CUSTO_DIF: TCurrencyField;
-    QRYHISTORICOPERIODO_INICIO: TDateField;
-    QRYHISTORICOPERIODO_FIM: TDateField;
-    QRYHISTORICOGRUPO_FILTRO: TStringField;
-    QRYHISTORICOMARCA_FILTRO: TStringField;
-    QRYHISTORICOFORNECEDOR_FILTRO: TStringField;
-    QRYHISTORICOLOCALIZACAO_FILTRO: TStringField;
-    QRYHISTORICOSTATUS: TBooleanField;
-    DSQRYHISTORICO: TDataSource;
+    Panel64: TPanel;
+    Panel65: TPanel;
+    Panel66: TPanel;
+    Panel67: TPanel;
+    Panel68: TPanel;
+    Label103: TLabel;
+    Label104: TLabel;
+    Label105: TLabel;
+    Label106: TLabel;
+    Label107: TLabel;
+    DBText58: TDBText;
+    Label108: TLabel;
+    DBText59: TDBText;
+    Label109: TLabel;
+    DBText60: TDBText;
+    Label110: TLabel;
+    DBText61: TDBText;
+    Label111: TLabel;
+    CurrencyEdit1: TCurrencyEdit;
+    CurrencyEdit2: TCurrencyEdit;
+    Label112: TLabel;
+    Label113: TLabel;
+    CurrencyEdit3: TCurrencyEdit;
+    Label114: TLabel;
+    CurrencyEdit4: TCurrencyEdit;
+    CurrencyEdit5: TCurrencyEdit;
+    Label115: TLabel;
+    CurrencyEdit6: TCurrencyEdit;
+    Label116: TLabel;
+    CurrencyEdit7: TCurrencyEdit;
+    Label117: TLabel;
+    CurrencyEdit8: TCurrencyEdit;
+    Label118: TLabel;
+    CurrencyEdit9: TCurrencyEdit;
+    Label119: TLabel;
+    CurrencyEdit10: TCurrencyEdit;
+    Label120: TLabel;
+    CurrencyEdit11: TCurrencyEdit;
+    Label121: TLabel;
+    CurrencyEdit12: TCurrencyEdit;
+    Label122: TLabel;
    
     procedure CarregarGrupos;
     procedure CarregarMarcas;
@@ -372,7 +445,7 @@ type
     procedure CarregarPedidosDoProdutoAtual;
     procedure btnconsultartodosClick(Sender: TObject);
     procedure btnconsultprevendaClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+
     procedure btnatualizaestoqueClick(Sender: TObject);
     procedure AjustarEstoqueEAtualizarMovimento(Sender: TObject);
 
@@ -390,6 +463,7 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure QRYRKVENDAfterScroll(DataSet: TDataSet);
     procedure QRYHISTORICOAfterScroll(DataSet: TDataSet);
+    procedure btnconsultaprodutosClick(Sender: TObject);
   
 
 
@@ -421,7 +495,7 @@ implementation
 
 {$R *.dfm}
 
-uses CONEXAOBD, FRMSENHA;
+uses CONEXAOBD, FRMSENHA, FRMSelectproduto;
 
 
 
@@ -1229,6 +1303,18 @@ end;
 
 
 
+
+
+procedure Tfrmmenu.btnconsultaprodutosClick(Sender: TObject);
+begin
+  // A forma mais direta para criar, exibir modalmente e destruir o Form
+  with TSelectProduto.Create(Application) do
+  try
+    ShowModal; // Exibe o formulário e pausa a execução do programa até que ele seja fechado
+  finally
+    Free;      // Libera a memória do formulário
+  end;
+end;
 
 
 procedure Tfrmmenu.btnconsultarClick(Sender: TObject);
@@ -2984,74 +3070,7 @@ end;
 
 
 
-procedure Tfrmmenu.Button1Click(Sender: TObject);
-var
-  sCodInterno: string;
-begin
-  // 1. Validação de seleção e estado da consulta (QRYRKVEND)
-  if not (QRYRKVEND.Active and not QRYRKVEND.IsEmpty) then
-  begin
-    ShowMessage('Nenhum produto selecionado na lista de vendas para consultar a movimentação.');
-    Exit;
-  end;
 
-  try
-    // 2. Captura o CodInterno (STRING) do produto selecionado
-    sCodInterno := QRYRKVEND.FieldByName('CodInterno').AsString;
-
-    if sCodInterno = '' then
-    begin
-        ShowMessage('Código Interno (CodInterno) do produto não encontrado.');
-        Exit;
-    end;
-
-    // 3. Define o SQL.Text com JOINs e ALIASES para clareza
-    with datamodule1.qryTabest1mov do
-    begin
-      Close;
-
-      SQL.Clear;
-      SQL.Add('SELECT');
-      SQL.Add('    M.Data,');
-      SQL.Add('    U.USUARIO AS Usuario,'); // Nome do Usuário
-      SQL.Add('    CASE M.LkOperacao WHEN 1 THEN ''SAIDA'' ELSE ''ENTRADA'' END AS Operacao,'); // Tipo de Operação (Saída/Entrada)
-      SQL.Add('    T.Tipo AS Tipo,'); // Descrição do Tipo de Movimento (Venda, Ajuste, etc.)
-      SQL.Add('    M.Pedido,');
-
-      // Apelidos (Aliases) para clareza no DBGrid:
-      SQL.Add('    M.Quantidade AS "Qtd. Movimentada",');
-      SQL.Add('    M.SaldoAnterior AS "Estoque Anterior",');
-      SQL.Add('    M.Saldo AS "Estoque Atualizado",');
-
-      SQL.Add('    M.Terminal,');
-      SQL.Add('    M.CodInterno,');
-      SQL.Add('    M.LkItem,');
-      SQL.Add('    M.LkUsuario,'); // Mantido para referência, mas Usuario já está nomeado
-      SQL.Add('    M.LkOperacao'); // Mantido para referência
-
-      SQL.Add('FROM');
-      SQL.Add('    TabEst1Mov M WITH (NOLOCK)');
-      SQL.Add('INNER JOIN SERV U ON U.Controle = M.LkUsuario');
-      SQL.Add('INNER JOIN TabEstMovTipo T ON T.Controle = M.LkTipo');
-
-      // Filtro pelo CodInterno do produto selecionado
-      SQL.Add('WHERE M.CodInterno = ' + QuotedStr(sCodInterno));
-      SQL.Add('ORDER BY M.Data DESC');
-
-      // 4. Abre a Query, recarregando o DBGridmovestoque
-      Open;
-    end;
-
-    // 5. Navega para a aba de movimentação (TabSheet6)
-    PageControl1.ActivePage := TabSheet5;
-
-  except
-    on E: Exception do
-    begin
-      ShowMessage('Erro ao consultar movimentação: ' + E.Message);
-    end;
-  end;
-end;
 
 
 procedure Tfrmmenu.movimentojacontado;
@@ -3369,7 +3388,7 @@ begin
     ShowMessage('Ajuste definitivo de estoque e movimento concluído com sucesso!');
 
     // Recarrega a lista de movimento para o usuário ver o ajuste
-    Button1Click(Sender);
+
 
   except
     on E: Exception do

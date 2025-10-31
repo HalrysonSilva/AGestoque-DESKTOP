@@ -6,7 +6,8 @@ uses
   FRMAGESTOQUE in 'FRMAGESTOQUE.pas' {frmmenu},
   CONEXAOBD in 'CONEXAOBD.pas' {DataModule1},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  FRMSelectproduto in 'FRMSelectproduto.pas' {SelectProduto};
 
 {$R *.res}
 

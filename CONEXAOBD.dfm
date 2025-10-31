@@ -1500,4 +1500,36 @@ object DataModule1: TDataModule1
       end
     end
   end
+  object QRYSELECIONAPRODUTOS: TUniQuery
+    Connection = ConDados
+    SQL.Strings = (
+      'SELECT * from'
+      'FROM TABEST1 '
+      'WHERE CODIGO LIKE :Codigo '
+      '   OR CODINTERNO LIKE :CodInterno '
+      '   OR PRODUTO LIKE :Produto')
+    Left = 520
+    Top = 24
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'Codigo'
+        Value = nil
+      end
+      item
+        DataType = ftUnknown
+        Name = 'CodInterno'
+        Value = nil
+      end
+      item
+        DataType = ftUnknown
+        Name = 'Produto'
+        Value = nil
+      end>
+  end
+  object DSQRYSELECIONAPRODUTO: TDataSource
+    DataSet = QRYSELECIONAPRODUTOS
+    Left = 520
+    Top = 80
+  end
 end

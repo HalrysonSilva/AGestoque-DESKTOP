@@ -111,6 +111,10 @@
         <DCCReference Include="CONEXAOBD.pas">
             <Form>DataModule1</Form>
         </DCCReference>
+        <DCCReference Include="FRMSelectproduto.pas">
+            <Form>SelectProduto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -132,8 +136,10 @@
                     <Source Name="MainSource">AgEstoque.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dcldxPSDBTeeChartRS26.bpl">ExpressPrinting System ReportLink for DBTeeChart by Developer Express Inc.</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Program Files (x86)\FastReport 6 VCL Enterprise\LibD26\dclfsTee26.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
