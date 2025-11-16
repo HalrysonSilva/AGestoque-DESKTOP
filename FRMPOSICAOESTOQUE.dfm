@@ -20,7 +20,6 @@ object Formposicaoest: TFormposicaoest
     Height = 297
     Align = alTop
     TabOrder = 0
-    ExplicitTop = -6
     object Label1: TLabel
       Left = 1
       Top = 1
@@ -35,8 +34,7 @@ object Formposicaoest: TFormposicaoest
       Font.Name = 'Segoe UI Semibold'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 0
-      ExplicitTop = -2
+      ExplicitWidth = 88
     end
     object DBGridprodutos: TDBGrid
       AlignWithMargins = True
@@ -45,6 +43,7 @@ object Formposicaoest: TFormposicaoest
       Width = 827
       Height = 259
       Align = alClient
+      DataSource = DSQRYPRODUTOSABERTOS
       TabOrder = 0
       TitleFont.Charset = ANSI_CHARSET
       TitleFont.Color = clWindowText
@@ -60,8 +59,6 @@ object Formposicaoest: TFormposicaoest
     Height = 335
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -1
-    ExplicitTop = 299
     object Label2: TLabel
       Left = 1
       Top = 1
@@ -85,6 +82,7 @@ object Formposicaoest: TFormposicaoest
       Width = 827
       Height = 297
       Align = alClient
+      DataSource = DSQRYPEDIDOS
       TabOrder = 0
       TitleFont.Charset = ANSI_CHARSET
       TitleFont.Color = clWindowText
@@ -116,7 +114,7 @@ object Formposicaoest: TFormposicaoest
       'LEFT JOIN TabFor F WITH (NOLOCK) ON P.LkFornec = F.Controle '
       'WHERE A.Cancelada <> 1 '
       '  AND A.VENDA <> 1 '
-      '  AND A.STATUS ='#39'P'#39' '
+      '  AND A.STATUS in =('#39'P'#39','#39'O'#39')'
       'GROUP BY '
       '    B.LkProduto, '
       '    P.CodInterno, '
@@ -130,14 +128,67 @@ object Formposicaoest: TFormposicaoest
       '    P.CodBarra '
       'ORDER BY '
       '    P.Produto')
-    AfterClose = QRYPRODUTOSABERTOSAfterClose
     AfterScroll = QRYPRODUTOSABERTOSAfterScroll
-    Left = 29
-    Top = 96
+    Left = 69
+    Top = 88
   end
   object DSQRYPRODUTOSABERTOS: TDataSource
     DataSet = QRYPRODUTOSABERTOS
-    Left = 37
+    Left = 77
     Top = 160
+  end
+  object QRYPEDIDOS: TUniQuery
+    Connection = DataModule1.ConDados
+    SQL.Strings = (
+      'SELECT '
+      '    A.*, '
+      '    B.Qtdreal AS QuantidadeItem,'
+      '    CASE '
+      '        WHEN A.STATUS = '#39'P'#39' THEN '#39'PR'#201'-VENDA'#39' '
+      '        WHEN A.STATUS = '#39'O'#39' THEN '#39'OR'#199'AMENTO'#39' '
+      '        ELSE '#39'OUTROS'#39' '
+      '    END AS Situacao'
+      'FROM '
+      '    TabEst3A A WITH (NOLOCK)'
+      'INNER JOIN '
+      '    TabEst3B B WITH (NOLOCK) ON A.Pedido = B.PEDIDO'
+      'WHERE '
+      '    A.Data >= :DataInicio AND A.Data <= :DataFim '
+      '    AND A.Cancelada <> 1 '
+      '    AND A.VENDA <> 1 '
+      '    AND A.STATUS ='#39'P'#39' '
+      
+        '    AND B.codinterno = :LkProduto -- CHAVE MESTRE: ID do produto' +
+        ' selecionado em QRYPRODUTOSABERTOS'
+      'ORDER BY '
+      '    A.Pedido DESC')
+    Left = 69
+    Top = 304
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'DataInicio'
+        Value = nil
+      end
+      item
+        DataType = ftUnknown
+        Name = 'DataFim'
+        Value = nil
+      end
+      item
+        DataType = ftUnknown
+        Name = 'LkProduto'
+        Value = nil
+      end>
+  end
+  object DSQRYPEDIDOS: TDataSource
+    DataSet = QRYPEDIDOS
+    Left = 69
+    Top = 376
+  end
+  object QRYCODINTERNO: TUniQuery
+    Connection = DataModule1.ConDados
+    Left = 72
+    Top = 216
   end
 end

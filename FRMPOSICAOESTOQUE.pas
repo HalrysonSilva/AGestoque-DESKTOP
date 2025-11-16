@@ -17,8 +17,11 @@ type
     DBGridpedidos: TDBGrid;
     QRYPRODUTOSABERTOS: TUniQuery;
     DSQRYPRODUTOSABERTOS: TDataSource;
+    QRYPEDIDOS: TUniQuery;
+    DSQRYPEDIDOS: TDataSource;
+    QRYCODINTERNO: TUniQuery;
     procedure CarregarPosicaoEExibir;
-    procedure QRYPRODUTOSABERTOSAfterClose(DataSet: TDataSet);
+
     procedure QRYPRODUTOSABERTOSAfterScroll(DataSet: TDataSet);private
     { Private declarations }
   public
@@ -39,56 +42,45 @@ uses CONEXAOBD, FRMAGESTOQUE, FRMMOVIMENTO, FRMSelectproduto, FRMSENHA;
 procedure TFormposicaoest.CarregarPosicaoEExibir;
 var
   sCodInterno: string;
-  dDataInicio, dDataFim: TDateTime;
   iLkProduto: Integer;
+  sNomeProduto: string;
 begin
-  // 1. COLETA DOS PARÂMETROS DO FRMMENU
-  if not Assigned(frmmenu) then
-  begin
-    ShowMessage('Erro: Formulário principal não inicializado.');
-    Exit;
-  end;
-
-  sCodInterno := Trim(frmmenu.Editcodinterno.Text);
-  dDataInicio := frmmenu.dtinicio.Date; // Assume dtinicio existe no frmmenu
-  dDataFim := frmmenu.dtfim.Date;       // Assume dtfim existe no frmmenu
-
-  if sCodInterno = '' then
+  // 1. COLETA DO CÓDIGO INTERNO DO PRODUTO ATIVO NO FRMMENU (DBText50)
+  if not Assigned(frmmenu) or not Assigned(frmmenu.DBText50) or (Trim(frmmenu.DBText50.Caption) = '') then
   begin
     ShowMessage('Nenhum produto selecionado (Código Interno está vazio).');
     Exit;
   end;
 
-  // 2. BUSCA O LKPRODUTO (Controle) DO PRODUTO ATUAL NA TABEST1
-  // QRYSEQ é usada para consultas rápidas no DataModule1
+  sCodInterno := Trim(frmmenu.DBText50.Caption);
+
+  // 2. BUSCA O LKPRODUTO (Controle) DO PRODUTO NA TABEST1
   with DataModule1.QRYSEQ do
   begin
     Close;
-    SQL.Text := 'SELECT Controle FROM TABEST1 WITH (NOLOCK) WHERE CodInterno = :CodInterno';
+    SQL.Text := 'SELECT Controle, Produto FROM TABEST1 WITH (NOLOCK) WHERE CodInterno = :CodInterno';
     ParamByName('CodInterno').AsString := sCodInterno;
     Open;
 
     if IsEmpty then
     begin
-      ShowMessage('Produto não encontrado na base TABEST1.');
+      ShowMessage(Format('Produto com Cod. Interno %s não encontrado na base TABEST1.', [sCodInterno]));
       Close;
       Exit;
     end;
     iLkProduto := FieldByName('Controle').AsInteger;
+    sNomeProduto := FieldByName('Produto').AsString;
     Close;
   end;
 
 
-  // 3. EXECUÇÃO DA CONSULTA MESTRA (QRYPRODUTOSABERTOS)
-  // Carrega apenas o produto selecionado na QRYPRODUTOSABERTOS
+
   with QRYPRODUTOSABERTOS do
   begin
     Close;
-    // Note: Replicamos a SQL do frmmenu, mas sem os filtros de data no cabeçalho,
-    // pois a consulta mestra original já era complexa.
     SQL.Text :=
         'SELECT ' +
-        '    B.LkProduto AS LkProduto, P.CodInterno, P.Produto, P.CodBarra, P.Moeda AS Localizacao, ' +
+        '    B.LkProduto AS LkProduto, P.CodInterno, P.Produto, P.CodBarra, P.CodFornecedor, P.Moeda AS Localizacao, ' +
         '    G.Setor AS Grupo, P.Fabricante AS Marca, F.Empresa AS Fornecedor, P.Quantidade AS QtdEstoque, ' +
         '    CAST(SUM(B.Qtdreal) AS NUMERIC(12, 2)) AS QtdReserva, COUNT(DISTINCT A.Pedido) AS NumPedidos ' +
         'FROM TabEst3B B WITH (NOLOCK) ' +
@@ -96,8 +88,8 @@ begin
         'INNER JOIN TABEST1 P WITH (NOLOCK) ON P.Controle = B.LkProduto ' +
         'LEFT JOIN TabEst8 G WITH (NOLOCK) ON P.LkSetor = G.Controle ' +
         'LEFT JOIN TabFor F WITH (NOLOCK) ON P.LkFornec = F.Controle ' +
-        'WHERE A.Cancelada <> 1 AND A.VENDA <> 1 AND A.STATUS IN (''P'') ' +
-        '  AND P.Controle = :LkProduto ' + // Filtro Mestre/Detalhe: Apenas o produto ativo
+        'WHERE A.Cancelada <> 1 AND A.VENDA <> 1 AND A.STATUS IN (''O'') ' + // Filtro de Status Aberto
+        '  AND P.Controle = :LkProduto ' +
         'GROUP BY B.LkProduto, P.CodInterno, P.Produto, P.Quantidade, P.CodFornecedor, P.Moeda, G.Setor, P.Fabricante, F.Empresa, P.CodBarra ' +
         'ORDER BY P.Produto';
 
@@ -105,98 +97,73 @@ begin
     Open;
   end;
 
-  // 4. EXECUÇÃO DA CONSULTA DETALHE (QRYPEDIDOS)
-  // Carrega os pedidos abertos para o produto (reutilizando a lógica do frmmenu)
-  with DataModule1.QRYPEDIDOS do
-  begin
-    Close;
-    SQL.Text :=
-      'SELECT A.*, B.Qtdreal AS QuantidadeItem, ' +
-      ' CASE WHEN A.STATUS = ''P'' THEN ''PRÉ-VENDA'' ELSE ''OUTROS'' END AS Situacao ' +
-      'FROM TabEst3A A WITH (NOLOCK) ' +
-      'INNER JOIN TabEst3B B WITH (NOLOCK) ON A.Pedido = B.PEDIDO ' +
-      'WHERE A.Data >= :DataInicio AND A.Data <= :DataFim ' +
-      '  AND A.Cancelada <> 1 AND A.VENDA <> 1 AND A.STATUS =''P'' ' +
-      '  AND B.LkProduto = :LkProduto ' +
-      'ORDER BY A.Pedido DESC';
 
-    ParamByName('DataInicio').AsDateTime := dDataInicio;
-    ParamByName('DataFim').AsDateTime := dDataFim;
-    ParamByName('LkProduto').AsInteger := iLkProduto;
-    Open;
-  end;
+  Label1.Caption := Format('Posição de Reserva do Produto: %s - %s', [sCodInterno, sNomeProduto]);
+  Label2.Caption := 'Pedidos de Reserva Detalhados: (Clique para carregar)';
 
 
-  // 5. LIGAÇÃO DOS GRIDS E EXIBIÇÃO
-  DBGridprodutos.DataSource := DSQRYPRODUTOSABERTOS;
-  DBGridpedidos.DataSource := DataModule1.DSQRYPEDIDOS;
-
-  Label1.Caption := 'Produtos com Reserva/Pré-Venda (Cód: ' + sCodInterno + ')';
-  Label2.Caption := 'Pedidos de Reserva Detalhados:';
-
-  Self.ShowModal;
-end;
-
-procedure TFormposicaoest.QRYPRODUTOSABERTOSAfterClose(DataSet: TDataSet);
-
-begin
-  // Esta procedure garante que, se a Query Mestra fechar (por filtro, limpeza, etc.),
-  // a Query Detalhe seja forçada a fechar, limpando o DBCtrlGridpedidos.
-  if datamodule1.QRYPEDIDOS.Active then
-    datamodule1.QRYPEDIDOS.Close;
 end;
 
 
 
+
+
+
+
+
+
+
+
+// unit FRMPOSICAOESTOQUE.pas
 procedure TFormposicaoest.QRYPRODUTOSABERTOSAfterScroll(DataSet: TDataSet);
 var
   LkProduto: Integer;
 begin
   // 1. Garante que há um produto ativo na lista mestra
-  if not DataSet.IsEmpty and DataSet.Active then
+  if (DataSet.Active) and (not DataSet.IsEmpty) then
   begin
     LkProduto := DataSet.FieldByName('LkProduto').AsInteger;
 
     // 2. Fecha a query de detalhe
-    datamodule1.QRYPEDIDOS.Close;
+    QRYPEDIDOS.Close;
+    QRYPEDIDOS.SQL.Clear;
 
-    // 3. Define a SQL (Garante que está configurada corretamente)
-    datamodule1.QRYPEDIDOS.SQL.Text :=
+    // 3. Define a SQL (sem filtro de data)
+    QRYPEDIDOS.SQL.Add(
       'SELECT ' +
-      '    A.*, ' + // Traz todas as colunas de TabEst3A
-      '    B.Qtdreal AS QuantidadeItem, ' + // Quantidade do item no pedido
-      '    CASE ' +
-      '        WHEN A.STATUS = ''P'' THEN ''PRÉ-VENDA'' ' +
-      '        WHEN A.STATUS = ''O'' THEN ''ORÇAMENTO'' ' +
-      '        ELSE ''OUTROS'' ' +
-      '    END AS Situacao ' +
+      '  A.*, ' +
+      '  B.Qtdreal AS QuantidadeItem, ' +
+      '  CASE ' +
+     // '    WHEN A.STATUS = ''P'' THEN ''PRÉ-VENDA'' ' +
+      '    WHEN A.STATUS = ''O'' THEN ''ORÇAMENTO'' ' +
+      '    ELSE ''OUTROS'' ' +
+      '  END AS Situacao ' +
       'FROM TabEst3A A WITH (NOLOCK) ' +
       'INNER JOIN TabEst3B B WITH (NOLOCK) ON A.Pedido = B.PEDIDO ' +
-      'WHERE A.Data >= :DataInicio AND A.Data <= :DataFim ' +
-      '  AND A.Cancelada <> 1 ' +
-      '  AND A.VENDA <> 1 ' +
-      '  AND A.STATUS =''P'' ' +
-      '  AND B.LkProduto = :LkProduto ' + // Filtro Mestre: ID do produto selecionado
-      'ORDER BY A.Pedido DESC';
+      'WHERE A.Cancelada <> 1 ' +   // Pedido não cancelado
+      '  AND A.VENDA <> 1 ' +       // Pedido não faturado
+      '  AND A.STATUS = ''P'' ' +   // Status de Pré-Venda/Reserva
+      '  AND B.LkProduto = :LkProduto ' + // Filtro Mestre
+      'ORDER BY A.Pedido DESC'
+    );
 
-    // 4. Aplica os parâmetros
-    datamodule1.QRYPEDIDOS.ParamByName('DataInicio').AsDateTime := frmmenu.dtinicio.Date;
-    datamodule1.QRYPEDIDOS.ParamByName('DataFim').AsDateTime := frmmenu.dtfim.Date;
-    datamodule1.QRYPEDIDOS.ParamByName('LkProduto').AsInteger := LkProduto; // Parâmetro Mestre
+    // 4. Aplica o parâmetro
+    QRYPEDIDOS.ParamByName('LkProduto').AsInteger := LkProduto;
 
-    // 5. Abre a consulta Detalhe
-    datamodule1.QRYPEDIDOS.Open;
+    // 5. Abre a consulta detalhe
+    QRYPEDIDOS.Open;
 
-    // 6. Liga a fonte de dados detalhe (se já não estiver no FormShow)
-    datamodule1.DSQRYPEDIDOS.DataSet := datamodule1.QRYPEDIDOS;
-  frmmenu.DBCtrlGridpedidos.DataSource := datamodule1.DSQRYPEDIDOS;
+    // 6. Liga a fonte de dados (se não estiver configurada no design)
+    DSQRYPEDIDOS.DataSet := QRYPEDIDOS;
+    DBGridpedidos.DataSource := DSQRYPEDIDOS;
   end
   else
   begin
-    // Se a mestra estiver vazia ou inativa, garante que a detalhe está fechada
-    datamodule1.QRYPEDIDOS.Close;
+    // Se a mestra estiver vazia ou inativa, fecha a detalhe
+    QRYPEDIDOS.Close;
   end;
 end;
+
 
 
 end.

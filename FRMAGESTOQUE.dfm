@@ -5357,8 +5357,6 @@
       Height = 882
       Align = alLeft
       TabOrder = 0
-      ExplicitLeft = -2
-      ExplicitTop = -6
       object Label2: TLabel
         AlignWithMargins = True
         Left = 11
@@ -6216,7 +6214,6 @@
                     ParentColor = False
                     ParentFont = False
                     StyleElements = []
-                    OnClick = LabelinforClick
                     ExplicitHeight = 25
                   end
                   object Label1: TLabel
@@ -6746,662 +6743,6 @@
                   StyleElements = []
                   ExplicitWidth = 6
                   ExplicitHeight = 30
-                end
-              end
-            end
-          end
-          object TabSheet4: TTabSheet
-            Caption = 'Produtos em Aberto'
-            ImageIndex = 3
-            object Panel46: TPanel
-              Left = 0
-              Top = 0
-              Width = 1229
-              Height = 822
-              Align = alClient
-              TabOrder = 0
-              object DBCtrlGridprodabertos: TDBCtrlGrid
-                Left = 1
-                Top = 1
-                Width = 1227
-                Height = 359
-                Align = alClient
-                PanelHeight = 89
-                PanelWidth = 1210
-                TabOrder = 0
-                RowCount = 4
-                SelectedColor = 16763522
-                StyleElements = []
-                object Panel33: TPanel
-                  Left = 0
-                  Top = 0
-                  Width = 153
-                  Height = 89
-                  Align = alLeft
-                  BevelOuter = bvNone
-                  TabOrder = 0
-                  object Label34: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 1
-                    Width = 147
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'C'#243'digo Barras'
-                    StyleElements = []
-                    ExplicitWidth = 73
-                  end
-                  object DBText27: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 18
-                    Width = 147
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'CodBarra'
-                    StyleElements = []
-                    ExplicitLeft = 6
-                    ExplicitTop = 32
-                    ExplicitWidth = 187
-                  end
-                  object Label40: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 40
-                    Width = 147
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'C'#243'd Fornecedor'
-                    StyleElements = []
-                    ExplicitWidth = 84
-                  end
-                  object DBText28: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 57
-                    Width = 147
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'CodFornecedor'
-                    StyleElements = []
-                    ExplicitLeft = 6
-                    ExplicitTop = 77
-                    ExplicitWidth = 187
-                  end
-                end
-                object Panel38: TPanel
-                  Left = 153
-                  Top = 0
-                  Width = 555
-                  Height = 89
-                  Align = alClient
-                  BevelOuter = bvNone
-                  TabOrder = 1
-                  object DBText29: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 18
-                    Width = 549
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'Produto'
-                    StyleElements = []
-                    ExplicitLeft = 95
-                    ExplicitTop = 26
-                    ExplicitWidth = 415
-                  end
-                  object Label41: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 1
-                    Width = 549
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Produto'
-                    StyleElements = []
-                    ExplicitWidth = 43
-                  end
-                  object Label42: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 40
-                    Width = 549
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Fornecedor'
-                    StyleElements = []
-                    ExplicitWidth = 60
-                  end
-                  object DBText30: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 57
-                    Width = 549
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'Fornecedor'
-                    StyleElements = []
-                    ExplicitLeft = 287
-                    ExplicitTop = 60
-                    ExplicitWidth = 223
-                  end
-                end
-                object Panel39: TPanel
-                  Left = 1008
-                  Top = 0
-                  Width = 202
-                  Height = 89
-                  Align = alRight
-                  BevelOuter = bvNone
-                  TabOrder = 2
-                  object Label43: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 1
-                    Width = 196
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Grupo'
-                    StyleElements = []
-                    ExplicitWidth = 33
-                  end
-                  object DBText31: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 18
-                    Width = 196
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'Grupo'
-                    StyleElements = []
-                    ExplicitLeft = -54
-                    ExplicitTop = 75
-                    ExplicitWidth = 239
-                  end
-                  object Label44: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 40
-                    Width = 196
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Marca'
-                    StyleElements = []
-                    ExplicitWidth = 33
-                  end
-                  object DBText32: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 57
-                    Width = 196
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'Marca'
-                    StyleElements = []
-                    ExplicitLeft = -6
-                    ExplicitTop = 75
-                    ExplicitWidth = 191
-                  end
-                end
-                object Panel40: TPanel
-                  Left = 858
-                  Top = 0
-                  Width = 150
-                  Height = 89
-                  Align = alRight
-                  BevelOuter = bvNone
-                  TabOrder = 3
-                  object DBText33: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 18
-                    Width = 144
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'QtdEstoque'
-                    StyleElements = []
-                    ExplicitTop = 26
-                    ExplicitWidth = 140
-                  end
-                  object Label45: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 1
-                    Width = 144
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Estoque'
-                    StyleElements = []
-                    ExplicitWidth = 42
-                  end
-                  object DBText34: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 57
-                    Width = 144
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'QtdReserva'
-                    StyleElements = []
-                    ExplicitTop = 75
-                    ExplicitWidth = 140
-                  end
-                  object Label46: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 40
-                    Width = 144
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Reservado'
-                    StyleElements = []
-                    ExplicitWidth = 54
-                  end
-                end
-                object Panel41: TPanel
-                  Left = 708
-                  Top = 0
-                  Width = 150
-                  Height = 89
-                  Align = alRight
-                  BevelOuter = bvNone
-                  TabOrder = 4
-                  object DBText35: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 57
-                    Width = 144
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'Localizacao'
-                    StyleElements = []
-                    ExplicitTop = 75
-                    ExplicitWidth = 183
-                  end
-                  object Label47: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 40
-                    Width = 144
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'Localiza'#231#227'o'
-                    StyleElements = []
-                    ExplicitWidth = 62
-                  end
-                  object DBText36: TDBText
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 18
-                    Width = 144
-                    Height = 20
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    DataField = 'NumPedidos'
-                    StyleElements = []
-                    ExplicitTop = 23
-                    ExplicitWidth = 183
-                  end
-                  object Label48: TLabel
-                    AlignWithMargins = True
-                    Left = 3
-                    Top = 1
-                    Width = 144
-                    Height = 15
-                    Margins.Top = 1
-                    Margins.Bottom = 1
-                    Align = alTop
-                    Caption = 'N'#186' Pedidos'
-                    StyleElements = []
-                    ExplicitWidth = 59
-                  end
-                end
-              end
-              object Panel49: TPanel
-                Left = 1
-                Top = 763
-                Width = 1227
-                Height = 58
-                Align = alBottom
-                TabOrder = 1
-                object btnconsultartodos: TBitBtn
-                  AlignWithMargins = True
-                  Left = 4
-                  Top = 4
-                  Width = 152
-                  Height = 50
-                  Align = alLeft
-                  Caption = 'Consultar todos'
-                  TabOrder = 0
-                  OnClick = btnconsultartodosClick
-                end
-              end
-              object Panel11: TPanel
-                Left = 1
-                Top = 360
-                Width = 1227
-                Height = 403
-                Align = alBottom
-                TabOrder = 2
-                object Label75: TLabel
-                  Left = 1
-                  Top = 1
-                  Width = 1225
-                  Height = 21
-                  Align = alTop
-                  Alignment = taCenter
-                  Caption = 'Pedidos'
-                  Color = clNavy
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWhite
-                  Font.Height = -16
-                  Font.Name = 'Segoe UI Semibold'
-                  Font.Style = [fsBold]
-                  ParentColor = False
-                  ParentFont = False
-                  Transparent = False
-                  StyleElements = []
-                  ExplicitWidth = 58
-                end
-                object DBCtrlGridpedidos: TDBCtrlGrid
-                  Left = 1
-                  Top = 22
-                  Width = 1225
-                  Height = 380
-                  Align = alClient
-                  DataSource = DataModule1.DSQRYPEDIDOS
-                  PanelHeight = 95
-                  PanelWidth = 1208
-                  TabOrder = 0
-                  RowCount = 4
-                  SelectedColor = 16763522
-                  StyleElements = []
-                  object Panel42: TPanel
-                    Left = 370
-                    Top = 0
-                    Width = 538
-                    Height = 95
-                    Align = alClient
-                    BevelOuter = bvNone
-                    TabOrder = 0
-                    object DBText39: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 18
-                      Width = 532
-                      Height = 20
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      DataField = 'Cliente'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitTop = 80
-                      ExplicitWidth = 298
-                    end
-                    object Label51: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 1
-                      Width = 532
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Cliente'
-                      StyleElements = []
-                      ExplicitWidth = 36
-                    end
-                  end
-                  object Panel43: TPanel
-                    Left = 1058
-                    Top = 0
-                    Width = 150
-                    Height = 95
-                    Align = alRight
-                    BevelOuter = bvNone
-                    TabOrder = 1
-                    object DBText41: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 20
-                      Width = 144
-                      Height = 17
-                      Align = alTop
-                      DataField = 'Vendedor'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 2
-                      ExplicitTop = 9
-                      ExplicitWidth = 183
-                    end
-                    object Label53: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 41
-                      Width = 144
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Usu'#225'rio'
-                      StyleElements = []
-                      ExplicitWidth = 40
-                    end
-                    object DBText42: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 60
-                      Width = 144
-                      Height = 17
-                      Align = alTop
-                      DataField = 'LkUsuario'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 2
-                      ExplicitTop = 15
-                      ExplicitWidth = 183
-                    end
-                    object Label54: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 1
-                      Width = 144
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Vendedor'
-                      StyleElements = []
-                      ExplicitWidth = 51
-                    end
-                  end
-                  object Panel44: TPanel
-                    Left = 908
-                    Top = 0
-                    Width = 150
-                    Height = 95
-                    Align = alRight
-                    BevelOuter = bvNone
-                    TabOrder = 2
-                    object DBText43: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 20
-                      Width = 144
-                      Height = 17
-                      Align = alTop
-                      DataField = 'QtdItens'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 2
-                      ExplicitTop = 9
-                      ExplicitWidth = 183
-                    end
-                    object Label55: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 41
-                      Width = 144
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Obs'
-                      StyleElements = []
-                      ExplicitWidth = 21
-                    end
-                    object DBText44: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 60
-                      Width = 144
-                      Height = 17
-                      Align = alTop
-                      DataField = 'Km'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 2
-                      ExplicitTop = 15
-                      ExplicitWidth = 183
-                    end
-                    object Label56: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 1
-                      Width = 144
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Itens'
-                      StyleElements = []
-                      ExplicitWidth = 26
-                    end
-                  end
-                  object Panel45: TPanel
-                    Left = 0
-                    Top = 0
-                    Width = 185
-                    Height = 95
-                    Align = alLeft
-                    BevelOuter = bvNone
-                    TabOrder = 3
-                    object DBText40: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 18
-                      Width = 179
-                      Height = 40
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      DataField = 'Situacao'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitTop = 24
-                    end
-                    object Label52: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 1
-                      Width = 179
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Situa'#231#227'o'
-                      StyleElements = []
-                      ExplicitWidth = 46
-                    end
-                    object DBText37: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 62
-                      Width = 179
-                      Height = 17
-                      Align = alTop
-                      DataField = 'DataEntrega'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 2
-                      ExplicitTop = 77
-                      ExplicitWidth = 185
-                    end
-                  end
-                  object Panel32: TPanel
-                    Left = 185
-                    Top = 0
-                    Width = 185
-                    Height = 95
-                    Align = alLeft
-                    BevelOuter = bvNone
-                    TabOrder = 4
-                    object DBText38: TDBText
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 20
-                      Width = 179
-                      Height = 40
-                      Align = alTop
-                      DataField = 'Pedido'
-                      DataSource = DataModule1.DSQRYPEDIDOS
-                      StyleElements = []
-                      ExplicitLeft = 0
-                      ExplicitTop = 23
-                      ExplicitWidth = 185
-                    end
-                    object Label50: TLabel
-                      AlignWithMargins = True
-                      Left = 3
-                      Top = 1
-                      Width = 179
-                      Height = 15
-                      Margins.Top = 1
-                      Margins.Bottom = 1
-                      Align = alTop
-                      Caption = 'Pedido'
-                      StyleElements = []
-                      ExplicitWidth = 37
-                    end
-                  end
                 end
               end
             end
@@ -8035,7 +7376,6 @@
                 ParentBackground = False
                 TabOrder = 0
                 StyleElements = []
-                ExplicitLeft = 527
                 object Label78: TLabel
                   AlignWithMargins = True
                   Left = 4
@@ -8146,7 +7486,6 @@
                 ParentBackground = False
                 TabOrder = 1
                 StyleElements = []
-                ExplicitLeft = 377
                 object Label86: TLabel
                   AlignWithMargins = True
                   Left = 4
@@ -8257,7 +7596,6 @@
                 ParentBackground = False
                 TabOrder = 2
                 StyleElements = []
-                ExplicitLeft = 186
                 object Label85: TLabel
                   AlignWithMargins = True
                   Left = 4
@@ -10234,8 +9572,6 @@
               Height = 323
               Align = alClient
               TabOrder = 2
-              ExplicitLeft = 3
-              ExplicitTop = 502
               object Panel75: TPanel
                 Left = 177
                 Top = 1
@@ -10427,7 +9763,6 @@
                   Font.Style = [fsBold]
                   ParentFont = False
                   TabOrder = 1
-                  ExplicitLeft = 0
                 end
               end
               object Panel30: TPanel
@@ -10438,8 +9773,6 @@
                 Align = alLeft
                 BevelOuter = bvNone
                 TabOrder = 3
-                ExplicitLeft = 457
-                ExplicitTop = 27
                 object Label140: TLabel
                   AlignWithMargins = True
                   Left = 3
@@ -10511,8 +9844,6 @@
                 Align = alLeft
                 BevelOuter = bvNone
                 TabOrder = 4
-                ExplicitLeft = 708
-                ExplicitTop = 3
                 object Btnconsultaaberto: TBitBtn
                   AlignWithMargins = True
                   Left = 3
@@ -10522,8 +9853,6 @@
                   Align = alTop
                   Caption = 'Consulta em Aberto'
                   TabOrder = 0
-                  ExplicitTop = 2
-                  ExplicitWidth = 176
                 end
                 object btnconsultamov: TBitBtn
                   AlignWithMargins = True
@@ -10535,7 +9864,6 @@
                   Caption = 'Movimento do Estoque'
                   TabOrder = 1
                   OnClick = btnconsultamovClick
-                  ExplicitTop = 2
                 end
               end
             end

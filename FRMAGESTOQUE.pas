@@ -124,59 +124,6 @@ type
     btnapagar: TBitBtn;
     Panel26: TPanel;
     LabelStatusConferencia: TLabel;
-    TabSheet4: TTabSheet;
-    Panel46: TPanel;
-    DBCtrlGridprodabertos: TDBCtrlGrid;
-    Panel33: TPanel;
-    Label34: TLabel;
-    DBText27: TDBText;
-    Label40: TLabel;
-    DBText28: TDBText;
-    Panel38: TPanel;
-    DBText29: TDBText;
-    Label41: TLabel;
-    Label42: TLabel;
-    DBText30: TDBText;
-    Panel39: TPanel;
-    Label43: TLabel;
-    DBText31: TDBText;
-    Label44: TLabel;
-    DBText32: TDBText;
-    Panel40: TPanel;
-    DBText33: TDBText;
-    Label45: TLabel;
-    DBText34: TDBText;
-    Label46: TLabel;
-    Panel41: TPanel;
-    DBText35: TDBText;
-    Label47: TLabel;
-    DBText36: TDBText;
-    Label48: TLabel;
-    Panel49: TPanel;
-    btnconsultartodos: TBitBtn;
-    Panel11: TPanel;
-    Label75: TLabel;
-    DBCtrlGridpedidos: TDBCtrlGrid;
-    Panel42: TPanel;
-    DBText39: TDBText;
-    Label51: TLabel;
-    Panel43: TPanel;
-    DBText41: TDBText;
-    Label53: TLabel;
-    DBText42: TDBText;
-    Label54: TLabel;
-    Panel44: TPanel;
-    DBText43: TDBText;
-    Label55: TLabel;
-    DBText44: TDBText;
-    Label56: TLabel;
-    Panel45: TPanel;
-    DBText40: TDBText;
-    Label52: TLabel;
-    DBText37: TDBText;
-    Panel32: TPanel;
-    DBText38: TDBText;
-    Label50: TLabel;
     TabSheet3: TTabSheet;
     Panel37: TPanel;
     btnRetomarProgresso: TButton;
@@ -419,8 +366,7 @@ type
     procedure EditcontagemKeyPress(Sender: TObject; var Key: Char);
     procedure btnconfirmaClick(Sender: TObject);
  
-    procedure btnupClick(Sender: TObject);
-    procedure BtndownClick(Sender: TObject);
+  
 
     procedure TeclaClick(Sender: TObject);
 
@@ -443,20 +389,19 @@ type
     procedure AtualizarBotoesRelatorio;
     procedure DBTextprodutoClick(Sender: TObject);
     procedure Label1Click(Sender: TObject);
-    procedure CarregarProdutosEmAberto;
-    procedure QRYPRODUTOSABERTOSAfterScroll(DataSet: TDataSet);
-    procedure btnqryprodupClick(Sender: TObject);
-    procedure btnqryproddownClick(Sender: TObject);
-    procedure btnqrypedidoupClick(Sender: TObject);
-    procedure btnqrypedidodownClick(Sender: TObject);
 
-    procedure QRYPRODUTOSABERTOSAfterClose(DataSet: TDataSet);
 
-    procedure BuscarProdutoPreVendaPorCodInterno;
-    procedure LabelinforClick(Sender: TObject);
-    procedure CarregarPedidosDoProdutoAtual;
-    procedure btnconsultartodosClick(Sender: TObject);
-    procedure btnconsultprevendaClick(Sender: TObject);
+
+
+
+
+
+
+
+
+
+
+
 
     procedure btnatualizaestoqueClick(Sender: TObject);
     procedure AjustarEstoqueEAtualizarMovimento(Sender: TObject);
@@ -492,7 +437,7 @@ type
 
     procedure btnconsultacadastroClick(Sender: TObject);
     procedure DBGRIDPRODUTOSBASEDblClick(Sender: TObject);
-
+    procedure btnconsultprevendaClick(Sender: TObject);
 
 
 
@@ -796,64 +741,17 @@ begin
   end;
 end;
 
-procedure Tfrmmenu.btnqrypedidodownClick(Sender: TObject);
-begin
-  // Move para o próximo registro na Query Detalhe (Pedidos de Reserva)
-  if datamodule1.QRYPEDIDOS.Active then
-  begin
-    if not datamodule1.QRYPEDIDOS.Eof then
-    begin
-      datamodule1.QRYPEDIDOS.Next; // Move para o próximo registro
-    end
-    // else { Opcional: ShowMessage('Você já está no último pedido.'); }
-  end;
-end;
-
-
-
-procedure Tfrmmenu.btnqrypedidoupClick(Sender: TObject);
-begin
-  // Move para o registro anterior na Query Detalhe (Pedidos de Reserva)
-  if datamodule1.QRYPEDIDOS.Active then
-  begin
-    if not datamodule1.QRYPEDIDOS.Bof then
-    begin
-      datamodule1.QRYPEDIDOS.Prior; // Move para o registro anterior
-    end
-    // else { Opcional: ShowMessage('Você já está no primeiro pedido.'); }
-  end;
-end;
 
 
 
 
-procedure Tfrmmenu.btnqryproddownClick(Sender: TObject);
-begin
-  // Move para o próximo registro na Query Mestra (Produtos em Aberto)
-  if QRYPRODUTOSABERTOS.Active then
-  begin
-    if not QRYPRODUTOSABERTOS.Eof then
-    begin
-      QRYPRODUTOSABERTOS.Next; // Move para o próximo registro
-    end
-    // else { Opcional: ShowMessage('Você já está no último produto.'); }
-  end;
-end;
 
 
 
-procedure Tfrmmenu.btnqryprodupClick(Sender: TObject);
-begin
-  // Move para o registro anterior na Query Mestra (Produtos em Aberto)
-  if QRYPRODUTOSABERTOS.Active then
-  begin
-    if not QRYPRODUTOSABERTOS.Bof then
-    begin
-      QRYPRODUTOSABERTOS.Prior; // Move para o registro anterior
-    end
-    // else { Opcional: ShowMessage('Você já está no primeiro produto.'); }
-  end;
-end;
+
+
+
+
 
 
 
@@ -1517,58 +1415,16 @@ CarregarListaBaseProdutos;
 
 end;
 
-procedure Tfrmmenu.btnconsultartodosClick(Sender: TObject);
-begin
-CarregarProdutosEmAberto;
-end;
-
-procedure Tfrmmenu.BtndownClick(Sender: TObject);
-begin
-  // --- ABA 1: PRODUTOS VENDIDOS (QRYRKVEND) ---
-  if PageControl1.ActivePage = TabSheet1 then
-  begin
-    if QRYRKVEND.Active and not QRYRKVEND.Eof then
-    QRYRKVEND.Next;
-  end
-
-  // --- ABA 2: PRODUTOS CONFERIDOS (CDSPRODUTOS) ---
-  else if PageControl1.ActivePage = TabSheet2 then
-  begin
-    if datamodule1.CDSPRODUTOS.Active and not datamodule1.CDSPRODUTOS.Eof then
-      datamodule1.CDSPRODUTOS.Next;
-  end
-
-  // --- ABA 3: HISTÓRICO (QRYHISTORICO) ---
-  else if PageControl1.ActivePage = TabSheet3 then
-  begin
-    if QRYHISTORICO.Active and not QRYHISTORICO.Eof then
-      QRYHISTORICO.Next;
-  end
-
-  // --- ABA 4: PRODUTOS EM ABERTO (QRYPRODUTOSABERTOS - Mestra) ---
-  else if PageControl1.ActivePage = TabSheet4 then
-  begin
-    // Navegação na Query Mestra (Produtos)
-    if QRYPRODUTOSABERTOS.Active and not QRYPRODUTOSABERTOS.Eof then
-      QRYPRODUTOSABERTOS.Next;
-  end
-
-  // --- ABA 5: PEDIDOS EM ABERTO (QRYPEDIDOS - Detalhe) ---
-  else if PageControl1.ActivePage = TabSheet4 then // <-- NOVO BLOCO PARA ABA 5
-  begin
-    // Navegação na Query Detalhe de Pedidos
-    if datamodule1.QRYPEDIDOS.Active and not datamodule1.QRYPEDIDOS.Eof then
-      datamodule1.QRYPEDIDOS.Next;
-  end;
-
-
-end;
 
 
 
 
 
-procedure Tfrmmenu.btnRelatPositivoClick(Sender: TObject);
+
+
+
+
+Procedure Tfrmmenu.btnRelatPositivoClick(Sender: TObject);
 const
   FILTRO_VALOR_POSITIVO = 'DIFERENCA > 0';
 begin
@@ -1749,8 +1605,8 @@ begin
     AtualizarContadores;
     LocalizarProximoNaoConferido;
     AtualizarBotoesRelatorio;
-    BuscarProdutoPreVendaPorCodInterno;
-    CarregarPedidosDoProdutoAtual;
+
+
     PageControl1.ActivePage := TabSheet2;
   end;
 end;
@@ -1760,46 +1616,7 @@ end;
 
 
 
-procedure Tfrmmenu.btnupClick(Sender: TObject);
-begin
-  // --- ABA 1: PRODUTOS VENDIDOS (QRYRKVEND) ---
-  if PageControl1.ActivePage = TabSheet1 then
-  begin
-    if QRYRKVEND.Active and not QRYRKVEND.Bof then
-      QRYRKVEND.Prior;
-  end
 
-  // --- ABA 2: PRODUTOS CONFERIDOS (CDSPRODUTOS) ---
-  else if PageControl1.ActivePage = TabSheet2 then
-  begin
-    if datamodule1.CDSPRODUTOS.Active and not datamodule1.CDSPRODUTOS.Bof then
-      datamodule1.CDSPRODUTOS.Prior;
-  end
-
-  // --- ABA 3: HISTÓRICO (QRYHISTORICO) ---
-  else if PageControl1.ActivePage = TabSheet3 then
-  begin
-    if QRYHISTORICO.Active and not QRYHISTORICO.Bof then
-      QRYHISTORICO.Prior;
-  end
-
-  // --- ABA 4: PRODUTOS EM ABERTO (QRYPRODUTOSABERTOS - Mestra) ---
-  else if PageControl1.ActivePage = TabSheet4 then
-  begin
-    // Navegação na Query Mestra de Produtos em Aberto
-    if QRYPRODUTOSABERTOS.Active and not QRYPRODUTOSABERTOS.Bof then
-      QRYPRODUTOSABERTOS.Prior
-  end
-
-  // --- ABA 5: PEDIDOS EM ABERTO (QRYPEDIDOS - Detalhe) ---
-  else if PageControl1.ActivePage = TabSheet4 then // <-- NOVO BLOCO PARA ABA 5
-  begin
-    // Navegação na Query Detalhe de Pedidos
-    if datamodule1.QRYPEDIDOS.Active and not datamodule1.QRYPEDIDOS.Bof then
-      datamodule1.QRYPEDIDOS.Prior;
-  end;
-  
-end;
 
 
 
@@ -2355,13 +2172,6 @@ end;
 
 
 
-procedure Tfrmmenu.QRYPRODUTOSABERTOSAfterClose(DataSet: TDataSet);
-begin
-  // Esta procedure garante que, se a Query Mestra fechar (por filtro, limpeza, etc.),
-  // a Query Detalhe seja forçada a fechar, limpando o DBCtrlGridpedidos.
-  if datamodule1.QRYPEDIDOS.Active then
-    datamodule1.QRYPEDIDOS.Close;
-end;
 
 
 
@@ -3201,11 +3011,6 @@ end;
 
 
 
-procedure Tfrmmenu.LabelinforClick(Sender: TObject);
-begin
-BuscarProdutoPreVendaPorCodInterno;
-CarregarPedidosDoProdutoAtual;
-end;
 
 
 
@@ -3260,126 +3065,13 @@ end;
 
 
 
-procedure Tfrmmenu.CarregarProdutosEmAberto;
-begin
-  // 1. Validação de Datas
-  if dtinicio.Date > dtfim.Date then
-  begin
-    ShowMessage('A Data Inicial não pode ser maior que a Data Final.');
-    Exit;
-  end;
-
-  // 2. Query Mestra: PRODUTOS EM ABERTO (QRYPRODUTOSABERTOS)
-  try
-    QRYPRODUTOSABERTOS.Close;
-
-    // SQL ATUALIZADO: Inclui CodBarra
-   QRYPRODUTOSABERTOS.SQL.Text :=
-      'SELECT ' +
-      '    B.LkProduto AS LkProduto, ' +
-      '    P.CodInterno, ' +
-      '    P.Produto, ' +
-      '    P.CodBarra, ' + // <-- NOVO: Código de Barras
-      '    P.CodFornecedor, ' +
-      '    P.Moeda AS Localizacao, ' +
-      '    G.Setor AS Grupo, ' +
-      '    P.Fabricante AS Marca, ' +
-      '    F.Empresa AS Fornecedor, ' +
-      '    P.Quantidade AS QtdEstoque, ' +
-      '    CAST(SUM(B.Qtdreal) AS NUMERIC(12, 2)) AS QtdReserva, ' +
-      '    COUNT(DISTINCT A.Pedido) AS NumPedidos ' +
-      'FROM TabEst3B B WITH (NOLOCK) ' +
-      'INNER JOIN TabEst3A A WITH (NOLOCK) ON A.Pedido = B.PEDIDO ' +
-      'INNER JOIN TABEST1 P WITH (NOLOCK) ON P.Controle = B.LkProduto ' +
-      'LEFT JOIN TabEst8 G WITH (NOLOCK) ON P.LkSetor = G.Controle ' +
-      'LEFT JOIN TabFor F WITH (NOLOCK) ON P.LkFornec = F.Controle ' +
-      'WHERE A.DATA >= :DataInicio AND A.DATA <= :DataFim ' +
-      '  AND A.Cancelada <> 1 ' +
-      '  AND A.VENDA <> 1 ' +
-      '  AND A.STATUS IN (''P'') ' +
-      // É crucial incluir todos os novos campos no GROUP BY
-      'GROUP BY B.LkProduto, P.CodInterno, P.Produto, P.Quantidade, P.CodFornecedor, P.Moeda, G.Setor, P.Fabricante, F.Empresa, P.CodBarra ' + // <-- INCLUÍDO NO GROUP BY
-      'ORDER BY P.Produto';
-
-    // Aplica filtros de data
-    QRYPRODUTOSABERTOS.ParamByName('DataInicio').AsDateTime := dtinicio.Date;
-    QRYPRODUTOSABERTOS.ParamByName('DataFim').AsDateTime := dtfim.Date;
-
-    // Abre a consulta Mestra
-    QRYPRODUTOSABERTOS.Open;
-
-    // Liga a fonte de dados mestra ao DBCtrlGrid
-    DSQRYPRODUTOSABERTOS.DataSet := QRYPRODUTOSABERTOS;
-    DBCtrlGridprodabertos.DataSource := DSQRYPRODUTOSABERTOS;
-
-  except
-    on E: Exception do
-      ShowMessage('Erro ao consultar produtos em aberto: ' + E.Message);
-  end;
-end;
 
 
 
 
 
-procedure Tfrmmenu.BuscarProdutoPreVendaPorCodInterno;
-var
-  CodInternoSelecionado: string;
-begin
-  // 1. Validação: Verifica se há produto selecionado na QRYRKVEND
-  if not QRYRKVEND.Active or QRYRKVEND.IsEmpty then
-  begin
-    ShowMessage('Nenhum produto selecionado para busca.');
-    Exit;
-  end;
 
-  CodInternoSelecionado := QRYRKVEND.FieldByName('CodInterno').AsString;
 
-  // 2. Executa a consulta de pré-vendas filtrando por CodInterno
-  try
-    QRYPRODUTOSABERTOS.Close;
-
-    QRYPRODUTOSABERTOS.SQL.Text :=
-      'SELECT ' +
-      '    B.LkProduto AS LkProduto, ' +
-      '    P.CodInterno, ' +
-      '    P.Produto, ' +
-      '    P.CodBarra, ' +
-      '    P.CodFornecedor, ' +
-      '    P.Moeda AS Localizacao, ' +
-      '    G.Setor AS Grupo, ' +
-      '    P.Fabricante AS Marca, ' +
-      '    F.Empresa AS Fornecedor, ' +
-      '    P.Quantidade AS QtdEstoque, ' +
-      '    CAST(SUM(B.Qtdreal) AS NUMERIC(12, 2)) AS QtdReserva, ' +
-      '    COUNT(DISTINCT A.Pedido) AS NumPedidos ' +
-      'FROM TabEst3B B WITH (NOLOCK) ' +
-      'INNER JOIN TabEst3A A WITH (NOLOCK) ON A.Pedido = B.PEDIDO ' +
-      'INNER JOIN TABEST1 P WITH (NOLOCK) ON P.Controle = B.LkProduto ' +
-      'LEFT JOIN TabEst8 G WITH (NOLOCK) ON P.LkSetor = G.Controle ' +
-      'LEFT JOIN TabFor F WITH (NOLOCK) ON P.LkFornec = F.Controle ' +
-      'WHERE A.Cancelada <> 1 ' +
-      '  AND A.VENDA <> 1 ' +
-      '  AND A.STATUS IN (''P'') ' +
-      '  AND P.CodInterno = :CodInterno ' +
-      'GROUP BY B.LkProduto, P.CodInterno, P.Produto, P.Quantidade, P.CodFornecedor, P.Moeda, G.Setor, P.Fabricante, F.Empresa, P.CodBarra ' +
-      'ORDER BY P.Produto';
-
-    QRYPRODUTOSABERTOS.ParamByName('CodInterno').AsString := CodInternoSelecionado;
-
-    QRYPRODUTOSABERTOS.Open;
-
-    // Liga ao grid
-    DSQRYPRODUTOSABERTOS.DataSet := QRYPRODUTOSABERTOS;
-    DBCtrlGridprodabertos.DataSource := DSQRYPRODUTOSABERTOS;
-
-   
-
-  except
-    on E: Exception do
-      ShowMessage('Erro ao buscar produto em pré-vendas: ' + E.Message);
-  end;
-end;
 
 
 
@@ -3467,80 +3159,7 @@ end;
 
 
 
-procedure Tfrmmenu.btnconsultprevendaClick(Sender: TObject);
-begin
-
-BuscarProdutoPreVendaPorCodInterno;
-CarregarPedidosDoProdutoAtual;
- PageControl1.ActivePage := TabSheet4;
-end;
-
-procedure Tfrmmenu.CarregarPedidosDoProdutoAtual;
-var
-  CodInterno: string;
-begin
-  // 1. Validação: Verifica se há produto selecionado na QRYRKVEND
-  if not QRYRKVEND.Active or QRYRKVEND.IsEmpty then
-  begin
-    ShowMessage('Nenhum produto selecionado para carregar pedidos.');
-    Exit;
-  end;
-
-  CodInterno := QRYRKVEND.FieldByName('CodInterno').AsString;
-
-  // 2. Busca o LkProduto correspondente na TABEST1
-  with DataModule1.QRYSEQ do
-  begin
-    Close;
-    SQL.Text := 'SELECT Controle FROM TABEST1 WHERE CodInterno = :CodInterno';
-    ParamByName('CodInterno').AsString := CodInterno;
-    Open;
-
-    if IsEmpty then
-    begin
-      ShowMessage('Produto não encontrado na base TABEST1.');
-      Exit;
-    end;
-  end;
-
-  // 3. Carrega os pedidos vinculados ao LkProduto
-  try
-    datamodule1.QRYPEDIDOS.Close;
-
-   datamodule1. QRYPEDIDOS.SQL.Text :=
-      'SELECT ' +
-      '    A.*, ' +
-      '    B.Qtdreal AS QuantidadeItem, ' +
-      '    CASE ' +
-      '        WHEN A.STATUS = ''P'' THEN ''PRÉ-VENDA'' ' +
-      '        WHEN A.STATUS = ''O'' THEN ''ORÇAMENTO'' ' +
-      '        ELSE ''OUTROS'' ' +
-      '    END AS Situacao ' +
-      'FROM TabEst3A A WITH (NOLOCK) ' +
-      'INNER JOIN TabEst3B B WITH (NOLOCK) ON A.Pedido = B.PEDIDO ' +
-      'WHERE A.Cancelada <> 1 ' +
-      '  AND A.VENDA <> 1 ' +
-      '  AND A.STATUS = ''P'' ' +
-      '  AND B.LkProduto = :LkProduto ' +
-      'ORDER BY A.Pedido DESC';
-
-    datamodule1.QRYPEDIDOS.ParamByName('LkProduto').AsInteger := DataModule1.QRYSEQ.FieldByName('Controle').AsInteger;
-
-    datamodule1.QRYPEDIDOS.Open;
-
-   datamodule1. DSQRYPEDIDOS.DataSet := datamodule1.QRYPEDIDOS;
-    DBCtrlGridpedidos.DataSource := datamodule1.DSQRYPEDIDOS;
-
-  except
-    on E: Exception do
-      ShowMessage('Erro ao carregar pedidos do produto: ' + E.Message);
-  end;
-end;
-
-
-
-
- procedure Tfrmmenu.Estoque_AjustarSaldo(sCodInterno: string; fNovaQuantidade: Extended; iLkUsuario: Integer);
+procedure Tfrmmenu.Estoque_AjustarSaldo(sCodInterno: string; fNovaQuantidade: Extended; iLkUsuario: Integer);
 // Responsável por atualizar a quantidade na TABEST1
 begin
     datamodule1.QRYUPDATETABEST1.SQL.Text :=
@@ -4301,6 +3920,19 @@ end;
 
 
 
+
+procedure Tfrmmenu.btnconsultprevendaClick(Sender: TObject);
+begin
+  // 1. Cria ou exibe a instância do novo formulário
+  if not Assigned(Formposicaoest) then
+    Formposicaoest := TFormposicaoest.Create(Application);
+
+  // 2. Chama a procedure para carregar a posição, passando as datas como parâmetro
+  Formposicaoest.CarregarPosicaoEExibir; // <-- Esta linha está correta
+
+  // 3. Exibe o formulário
+  Formposicaoest.ShowModal;
+end;
 
 end.
 

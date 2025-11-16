@@ -749,55 +749,6 @@ object DataModule1: TDataModule1
       FieldName = 'VALOR_DIFERENCA'
     end
   end
-  object QRYPEDIDOS: TUniQuery
-    Connection = ConDados
-    SQL.Strings = (
-      'SELECT '
-      '    A.*, '
-      '    B.Qtdreal AS QuantidadeItem,'
-      '    CASE '
-      '        WHEN A.STATUS = '#39'P'#39' THEN '#39'PR'#201'-VENDA'#39' '
-      '        WHEN A.STATUS = '#39'O'#39' THEN '#39'OR'#199'AMENTO'#39' '
-      '        ELSE '#39'OUTROS'#39' '
-      '    END AS Situacao'
-      'FROM '
-      '    TabEst3A A WITH (NOLOCK)'
-      'INNER JOIN '
-      '    TabEst3B B WITH (NOLOCK) ON A.Pedido = B.PEDIDO'
-      'WHERE '
-      '    A.Data >= :DataInicio AND A.Data <= :DataFim '
-      '    AND A.Cancelada <> 1 '
-      '    AND A.VENDA <> 1 '
-      '    AND A.STATUS ='#39'P'#39' '
-      
-        '    AND B.codinterno = :LkProduto -- CHAVE MESTRE: ID do produto' +
-        ' selecionado em QRYPRODUTOSABERTOS'
-      'ORDER BY '
-      '    A.Pedido DESC')
-    Left = 133
-    Top = 384
-    ParamData = <
-      item
-        DataType = ftUnknown
-        Name = 'DataInicio'
-        Value = nil
-      end
-      item
-        DataType = ftUnknown
-        Name = 'DataFim'
-        Value = nil
-      end
-      item
-        DataType = ftUnknown
-        Name = 'LkProduto'
-        Value = nil
-      end>
-  end
-  object DSQRYPEDIDOS: TDataSource
-    DataSet = QRYPEDIDOS
-    Left = 133
-    Top = 448
-  end
   object DSQRYPRODUTOSCONTADOS: TDataSource
     DataSet = QRYPRODUTOSCONTADOS
     Left = 373
