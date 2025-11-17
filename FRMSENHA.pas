@@ -18,6 +18,7 @@ type
     btnlogar: TBitBtn;
     QRYUSER: TUniQuery;
     QRYSENHA: TUniQuery;
+    Panel2: TPanel;
     procedure FormShow(Sender: TObject);
     procedure CmbusuarioChange(Sender: TObject);
     procedure btnlogarClick(Sender: TObject);
@@ -38,7 +39,7 @@ implementation
 
 {$R *.dfm}
 
-uses CONEXAOBD, FRMAGESTOQUE;
+uses CONEXAOBD, FRMCONTARESTOQUE;
 
 // -----------------------------------------------------------
 // FUNÇÕES AUXILIARES DE CRIPTOGRAFIA E SENHA DO DIA

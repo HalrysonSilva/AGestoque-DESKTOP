@@ -32,27 +32,36 @@ object SelectProduto: TSelectProduto
     Width = 945
     Height = 89
     Align = alTop
+    BevelOuter = bvNone
+    ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 784
     object Label1: TLabel
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 937
-      Height = 17
+      Left = 0
+      Top = 0
+      Width = 945
+      Height = 35
       Align = alTop
+      Alignment = taCenter
       Caption = 'Pesquisar Produto'
-      ExplicitLeft = 16
-      ExplicitTop = 12
-      ExplicitWidth = 112
+      Color = 3026478
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -21
+      Font.Name = 'Segoe UI Semibold'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
     end
     object Editselectproduto: TEdit
       AlignWithMargins = True
-      Left = 4
-      Top = 27
-      Width = 937
+      Left = 3
+      Top = 38
+      Width = 939
       Height = 33
       Align = alTop
+      BevelInner = bvNone
+      BevelOuter = bvRaised
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -19
@@ -60,11 +69,11 @@ object SelectProduto: TSelectProduto
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
+      TextHint = 'C'#243'digo do produto'
       OnChange = EditselectprodutoChange
       OnKeyDown = EditselectprodutoKeyDown
-      ExplicitLeft = 16
-      ExplicitTop = 39
-      ExplicitWidth = 521
+      ExplicitLeft = 6
+      ExplicitTop = 41
     end
   end
   object DBGridprodutos: TDBGrid

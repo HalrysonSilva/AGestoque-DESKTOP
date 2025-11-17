@@ -2,8 +2,8 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2025/09/09 12:00:49.000.266,=F:\DELPHI\Unit1.pas</Transaction>
-    <Transaction>2025/09/09 12:06:08.000.450,F:\DELPHI\Unit1.dfm=C:\Users\WILL\Music\RELRANKVENDAS.dfm</Transaction>
     <Transaction>2025/09/09 12:06:08.000.450,F:\DELPHI\Unit1.pas=C:\Users\WILL\Music\RELRANKVENDAS.pas</Transaction>
+    <Transaction>2025/09/09 12:06:08.000.450,F:\DELPHI\Unit1.dfm=C:\Users\WILL\Music\RELRANKVENDAS.dfm</Transaction>
     <Transaction>2025/09/09 12:06:12.000.405,F:\DELPHI\Project1.dproj=C:\Users\WILL\Music\Project1.dproj</Transaction>
     <Transaction>2025/09/09 12:10:28.000.253,=C:\Users\WILL\Music\CONEXAOBD.pas</Transaction>
     <Transaction>2025/10/29 19:26:02.000.965,=C:\developer\XE10.3\contagem de estoque\Unit1.pas</Transaction>
@@ -16,21 +16,29 @@
     <Transaction>2025/10/30 17:24:57.000.570,C:\Developer\AgEstoque\SERVSEN2.pas=</Transaction>
     <Transaction>2025/10/30 17:27:39.000.091,=C:\Developer\AgEstoque\Unit1.pas</Transaction>
     <Transaction>2025/10/31 07:07:16.000.301,=C:\developer\XE10.3\AgEstoque\Unit1.pas</Transaction>
-    <Transaction>2025/10/31 07:07:41.000.934,C:\developer\XE10.3\AgEstoque\FRMSENHA.dfm=C:\developer\XE10.3\AgEstoque\Unit1.dfm</Transaction>
     <Transaction>2025/10/31 07:07:41.000.934,C:\developer\XE10.3\AgEstoque\FRMSENHA.pas=C:\developer\XE10.3\AgEstoque\Unit1.pas</Transaction>
+    <Transaction>2025/10/31 07:07:41.000.934,C:\developer\XE10.3\AgEstoque\FRMSENHA.dfm=C:\developer\XE10.3\AgEstoque\Unit1.dfm</Transaction>
     <Transaction>2025/10/31 10:19:41.000.551,=C:\Developer\WILL\AGestoque-Desktop\FRMSelectproduto.pas</Transaction>
     <Transaction>2025/11/14 23:22:31.000.577,=C:\developer\AGestoque-Desktop\Unit1.pas</Transaction>
     <Transaction>2025/11/14 23:22:42.000.858,C:\developer\AGestoque-Desktop\Unit1.pas=C:\developer\AGestoque-Desktop\FRMMOVIMENTO.pas</Transaction>
     <Transaction>2025/11/14 23:22:42.000.858,C:\developer\AGestoque-Desktop\Unit1.dfm=C:\developer\AGestoque-Desktop\FRMMOVIMENTO.dfm</Transaction>
     <Transaction>2025/11/14 23:54:36.000.212,=C:\developer\AGestoque-Desktop\Unit1.pas</Transaction>
-    <Transaction>2025/11/14 23:55:30.000.064,C:\developer\AGestoque-Desktop\Unit1.pas=C:\developer\AGestoque-Desktop\FRMPOSICAOESTOQUE.pas</Transaction>
     <Transaction>2025/11/14 23:55:30.000.064,C:\developer\AGestoque-Desktop\Unit1.dfm=C:\developer\AGestoque-Desktop\FRMPOSICAOESTOQUE.dfm</Transaction>
+    <Transaction>2025/11/14 23:55:30.000.064,C:\developer\AGestoque-Desktop\Unit1.pas=C:\developer\AGestoque-Desktop\FRMPOSICAOESTOQUE.pas</Transaction>
+    <Transaction>2025/11/16 13:02:14.000.445,=C:\developer\AGestoque-Desktop\Unit1.pas</Transaction>
+    <Transaction>2025/11/16 13:15:14.000.746,C:\developer\AGestoque-Desktop\Unit1.dfm=C:\developer\AGestoque-Desktop\FRM_MENU.dfm</Transaction>
+    <Transaction>2025/11/16 13:15:14.000.746,C:\developer\AGestoque-Desktop\Unit1.pas=C:\developer\AGestoque-Desktop\FRM_MENU.pas</Transaction>
+    <Transaction>2025/11/16 14:23:38.000.954,=C:\developer\AGestoque-Desktop\Unit1.pas</Transaction>
+    <Transaction>2025/11/16 14:23:56.000.462,C:\developer\AGestoque-Desktop\Unit1.pas=C:\developer\AGestoque-Desktop\FRMALTERAPRECOS.pas</Transaction>
+    <Transaction>2025/11/16 14:23:56.000.462,C:\developer\AGestoque-Desktop\Unit1.dfm=C:\developer\AGestoque-Desktop\FRMALTERAPRECOS.dfm</Transaction>
+    <Transaction>2025/11/16 15:19:33.000.884,C:\developer\AGestoque-Desktop\FRMAGESTOQUE.dfm=C:\developer\AGestoque-Desktop\FRMCONTARESTOQUE.dfm</Transaction>
+    <Transaction>2025/11/16 15:19:33.000.884,C:\developer\AGestoque-Desktop\FRMAGESTOQUE.pas=C:\developer\AGestoque-Desktop\FRMCONTARESTOQUE.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="CONEXAOBD.pas"/>
     <File Path="CONEXAOBD.dfm"/>
-    <File Path="FRMAGESTOQUE.pas"/>
-    <File Path="FRMAGESTOQUE.dfm"/>
+    <File Path="FRMCONTARESTOQUE.pas"/>
+    <File Path="FRMCONTARESTOQUE.dfm"/>
     <File Path="FRMSENHA.pas"/>
     <File Path="FRMSENHA.dfm"/>
     <File Path="FRMSelectproduto.pas"/>
@@ -39,5 +47,9 @@
     <File Path="FRMMOVIMENTO.dfm"/>
     <File Path="FRMPOSICAOESTOQUE.pas"/>
     <File Path="FRMPOSICAOESTOQUE.dfm"/>
+    <File Path="FRM_MENU.pas"/>
+    <File Path="FRM_MENU.dfm"/>
+    <File Path="FRMALTERAPRECOS.pas"/>
+    <File Path="FRMALTERAPRECOS.dfm"/>
   </ProjectSortOrder>
 </BorlandProject>

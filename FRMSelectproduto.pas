@@ -34,7 +34,8 @@ implementation
 
 {$R *.dfm}
 
-uses CONEXAOBD, FRMAGESTOQUE;
+uses CONEXAOBD, FRMCONTARESTOQUE, FRM_MENU, FRMALTERAPRECOS, FRMMOVIMENTO,
+  FRMPOSICAOESTOQUE, FRMSENHA;
 
 
 procedure TSelectProduto.LimparFormulario;
@@ -47,192 +48,233 @@ begin
 end;
 
 procedure TSelectProduto.DBGridprodutosDblClick(Sender: TObject);
+var
+  sCodInterno: string;
+  iNaoSaiTabela: Integer; // << Variável local para capturar o código do produto
 begin
   if not DataModule1.qrySelecionaProdutos.IsEmpty then
   begin
+    // Opção 1: Lê como booleano e converte (False=0, True=1)
+iNaoSaiTabela := Integer(DataModule1.qrySelecionaProdutos.FieldByName('NAOSAITABELA').AsBoolean);
+    Formalterapreco.labelproduto.caption := DataModule1.qrySelecionaProdutos.FieldByName('PRODUTO').AsString;
 
-    frmmenu.labelproduto.caption := DataModule1.qrySelecionaProdutos.FieldByName('PRODUTO').AsString;
+    if Assigned(Formalterapreco.Editcodinterno) then
+      Formalterapreco.Editcodinterno.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODINTERNO').AsString;
 
-    if Assigned(frmmenu.Editcodinterno) then
-      frmmenu.Editcodinterno.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODINTERNO').AsString;
+    if Assigned(Formalterapreco.Editcodbarra) then
+      Formalterapreco.Editcodbarra.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODBARRA').AsString;
 
-    if Assigned(frmmenu.Editcodbarra) then
-      frmmenu.Editcodbarra.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODBARRA').AsString;
+    if Assigned(Formalterapreco.Editcodfornecedor) then
+      Formalterapreco.Editcodfornecedor.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODFORNECEDOR').AsString;
 
-    if Assigned(frmmenu.Editcodfornecedor) then
-      frmmenu.Editcodfornecedor.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODFORNECEDOR').AsString;
+    if Assigned(Formalterapreco.Editcodorigem) then
+      Formalterapreco.Editcodorigem.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODorigem').AsString;
 
-    if Assigned(frmmenu.Editcodorigem) then
-      frmmenu.Editcodorigem.Text := DataModule1.qrySelecionaProdutos.FieldByName('CODorigem').AsString;
+    if Assigned(Formalterapreco.Editgrupo) then
+      Formalterapreco.Editgrupo.Text := DataModule1.qrySelecionaProdutos.FieldByName('lksetor').AsString;
 
-    if Assigned(frmmenu.Editgrupo) then
-      frmmenu.Editgrupo.Text := DataModule1.qrySelecionaProdutos.FieldByName('lksetor').AsString;
+    if Assigned(Formalterapreco.Editmarca) then
+      Formalterapreco.Editmarca.Text := DataModule1.qrySelecionaProdutos.FieldByName('fabricante').AsString;
 
-    if Assigned(frmmenu.Editmarca) then
-      frmmenu.Editmarca.Text := DataModule1.qrySelecionaProdutos.FieldByName('fabricante').AsString;
+    if Assigned(Formalterapreco.Editfornecedor) then
+      Formalterapreco.Editfornecedor.Text := DataModule1.qrySelecionaProdutos.FieldByName('lkfornec').AsString;
 
-    if Assigned(frmmenu.Editfornecedor) then
-      frmmenu.Editfornecedor.Text := DataModule1.qrySelecionaProdutos.FieldByName('lkfornec').AsString;
-
-    if Assigned(frmmenu.Editlocalizacao) then
-      frmmenu.Editlocalizacao.Text := DataModule1.qrySelecionaProdutos.FieldByName('moeda').AsString;
-
-
-if Assigned(frmmenu.DBTexestoqueloja) then
-    frmmenu.DBTexestoqueloja.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('quantidade').AsFloat);
-
-if Assigned(frmmenu.DBTextestoquedeposito) then
-    frmmenu.DBTextestoquedeposito.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('qtddepos').AsFloat);
-
-if Assigned(frmmenu.DBTextestoquefiscal) then
-    frmmenu.DBTextestoquefiscal.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('qtdfiscal').AsFloat);
-
-if Assigned(frmmenu.DBTextestoqueminino) then
-    frmmenu.DBTextestoqueminino.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('estminimo').AsFloat);
-
-frmmenu.DBTextestoquetotal.Caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('quantidade').AsFloat + DataModule1.qrySelecionaProdutos.FieldByName('qtddepos').AsFloat);
+    if Assigned(Formalterapreco.Editlocalizacao) then
+      Formalterapreco.Editlocalizacao.Text := DataModule1.qrySelecionaProdutos.FieldByName('moeda').AsString;
 
 
- // INFORMAÇAO DE PREÇOS
+    if Assigned(Formalterapreco.DBTexestoqueloja) then
+      Formalterapreco.DBTexestoqueloja.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('quantidade').AsFloat);
 
-    //preço custo
+    if Assigned(Formalterapreco.DBTextestoquedeposito) then
+      Formalterapreco.DBTextestoquedeposito.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('qtddepos').AsFloat);
 
-if Assigned(frmmenu.Editprcusto) then
-frmmenu.Editprcusto.Value := DataModule1.qrySelecionaProdutos.FieldByName('PrecoCusto').AsCurrency;
+    if Assigned(Formalterapreco.DBTextestoquefiscal) then
+      Formalterapreco.DBTextestoquefiscal.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('qtdfiscal').AsFloat);
 
-    //Customedio
-if Assigned(frmmenu.Editprcustomedio) then
-frmmenu.Editprcustomedio.Value := DataModule1.qrySelecionaProdutos.FieldByName('CustoMedio').AsCurrency;
+    if Assigned(Formalterapreco.DBTextestoqueminino) then
+      Formalterapreco.DBTextestoqueminino.caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('estminimo').AsFloat);
+
+    // DBTextestoquetotal deve ser verificado se é um TDBText (propriedade Caption) ou TDBEdit (propriedade Text)
+    if Assigned(Formalterapreco.DBTextestoquetotal) then
+      Formalterapreco.DBTextestoquetotal.Caption := FormatFloat('0.00', DataModule1.qrySelecionaProdutos.FieldByName('quantidade').AsFloat + DataModule1.qrySelecionaProdutos.FieldByName('qtddepos').AsFloat);
 
 
-// Margem de Lucro Varejo 1
-if Assigned(frmmenu.editmargemvarejo1) then
-    frmmenu.editmargemvarejo1.Value := DataModule1.qrySelecionaProdutos.FieldByName('Lucro').AsFloat;
+    // INFORMAÇAO DE PREÇOS
+
+    // preço custo
+    if Assigned(Formalterapreco.Editprcusto) then
+      Formalterapreco.Editprcusto.Value := DataModule1.qrySelecionaProdutos.FieldByName('PrecoCusto').AsCurrency;
+
+    // Customedio
+    if Assigned(Formalterapreco.Editprcustomedio) then
+      Formalterapreco.Editprcustomedio.Value := DataModule1.qrySelecionaProdutos.FieldByName('CustoMedio').AsCurrency;
+
+
+    // Margem de Lucro Varejo 1
+    if Assigned(Formalterapreco.editmargemvarejo1) then
+      Formalterapreco.editmargemvarejo1.Value := DataModule1.qrySelecionaProdutos.FieldByName('Lucro').AsFloat;
 
     // Margem de Lucro Varejo 2
-if Assigned(frmmenu.editmargemvarejo2) then
-    frmmenu.editmargemvarejo2.Value := DataModule1.qrySelecionaProdutos.FieldByName('perprazo').AsFloat;
+    if Assigned(Formalterapreco.editmargemvarejo2) then
+      Formalterapreco.editmargemvarejo2.Value := DataModule1.qrySelecionaProdutos.FieldByName('perprazo').AsFloat;
 
 
-        // Margem de Lucro Varejo 3
-if Assigned(frmmenu.editmargemvarejo3) then
-    frmmenu.editmargemvarejo3.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado').AsFloat;
+    // Margem de Lucro Varejo 3
+    if Assigned(Formalterapreco.editmargemvarejo3) then
+      Formalterapreco.editmargemvarejo3.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado').AsFloat;
 
-           // Margem de Lucro Varejo 4
-if Assigned(frmmenu.editmargemvarejo4) then
-    frmmenu.editmargemvarejo4.Value := DataModule1.qrySelecionaProdutos.FieldByName('perminimo').AsFloat;
-
-
-             // PRECO VAREJO 1
-if Assigned(frmmenu.editprecovarejo1) then
-    frmmenu.editprecovarejo1.Value := DataModule1.qrySelecionaProdutos.FieldByName('precovenda').AsFloat;
-
-                 // PRECO VAREJO 2
-if Assigned(frmmenu.editprecovarejo2) then
-    frmmenu.editprecovarejo2.Value := DataModule1.qrySelecionaProdutos.FieldByName('prprazo').AsFloat;
+    // Margem de Lucro Varejo 4
+    if Assigned(Formalterapreco.editmargemvarejo4) then
+      Formalterapreco.editmargemvarejo4.Value := DataModule1.qrySelecionaProdutos.FieldByName('perminimo').AsFloat;
 
 
-                     // PRECO VAREJO 3
-if Assigned(frmmenu.editprecovarejo3) then
-    frmmenu.editprecovarejo3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado').AsFloat;
+    // PRECO VAREJO 1
+    if Assigned(Formalterapreco.editprecovarejo1) then
+      Formalterapreco.editprecovarejo1.Value := DataModule1.qrySelecionaProdutos.FieldByName('precovenda').AsFloat;
 
-                         // PRECO VAREJO 4
-if Assigned(frmmenu.editprecovarejo4) then
-    frmmenu.editprecovarejo4.Value := DataModule1.qrySelecionaProdutos.FieldByName('prminimo').AsFloat;
-
-
-                         // Margem de Lucro atacado 1
-if Assigned(frmmenu.editmargematacado1) then
-    frmmenu.editmargematacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado1').AsFloat;
-
-                             // Margem de Lucro atacado 2
-if Assigned(frmmenu.editmargematacado2) then
-    frmmenu.editmargematacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado2').AsFloat;
-
-                             // Margem de Lucro atacado 3
-if Assigned(frmmenu.editmargematacado3) then
-    frmmenu.editmargematacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado3').AsFloat;
-
-                             // Margem de Lucro atacado 4
-if Assigned(frmmenu.editmargematacado4) then
-    frmmenu.editmargematacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado4').AsFloat;
-
-                                 //preço atacado 1
-if Assigned(frmmenu.editprecoatacado1) then
-    frmmenu.editprecoatacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado1').AsFloat;
-
-                                     //preço atacado 2
-if Assigned(frmmenu.editprecoatacado2) then
-    frmmenu.editprecoatacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado2').AsFloat;
-
-                                     //preço atacado 3
-if Assigned(frmmenu.editprecoatacado3) then
-    frmmenu.editprecoatacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado3').AsFloat;
-
-                                     //preço atacado 4
-if Assigned(frmmenu.editprecoatacado4) then
-    frmmenu.editprecoatacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado4').AsFloat;
+    // PRECO VAREJO 2
+    if Assigned(Formalterapreco.editprecovarejo2) then
+      Formalterapreco.editprecovarejo2.Value := DataModule1.qrySelecionaProdutos.FieldByName('prprazo').AsFloat;
 
 
+    // PRECO VAREJO 3
+    if Assigned(Formalterapreco.editprecovarejo3) then
+      Formalterapreco.editprecovarejo3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado').AsFloat;
 
-                                     //preço atacado unitario 1
-if Assigned(frmmenu.editprecounatacado1) then
-    frmmenu.editprecounatacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado1').AsFloat;
-
-                                     //preço atacado unitario 2
-if Assigned(frmmenu.editprecounatacado2) then
-    frmmenu.editprecounatacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado2').AsFloat;
-
-                                     //preço atacado unitario 3
-if Assigned(frmmenu.editprecounatacado3) then
-    frmmenu.editprecounatacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado3').AsFloat;
-
-                                     //preço atacado unitario 4
-if Assigned(frmmenu.editprecounatacado4) then
-    frmmenu.editprecounatacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado4').AsFloat;
-
-                                       //quantidade na embalagem
-    if Assigned(frmmenu.editqtdembalagem) then
-    frmmenu.editqtdembalagem.text := DataModule1.qrySelecionaProdutos.FieldByName('qtdatacado').Asstring;
-
-                                           //quantidade mimina para atacado
-    if Assigned(frmmenu.editqtdminatacado) then
-    frmmenu.editqtdminatacado.text := DataModule1.qrySelecionaProdutos.FieldByName('qtdminpratacado').Asstring;
+    // PRECO VAREJO 4
+    if Assigned(Formalterapreco.editprecovarejo4) then
+      Formalterapreco.editprecovarejo4.Value := DataModule1.qrySelecionaProdutos.FieldByName('prminimo').AsFloat;
 
 
-// data cadastro
-if Assigned(frmmenu.dtdatacastro) then
-    frmmenu.dtdatacastro.Date := DataModule1.qrySelecionaProdutos.FieldByName('Data').AsDateTime; // Data de Cadastro
+    // Margem de Lucro atacado 1
+    if Assigned(Formalterapreco.editmargematacado1) then
+      Formalterapreco.editmargematacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado1').AsFloat;
 
-// data da última venda
-if Assigned(frmmenu.dtultvenda) then
-    frmmenu.dtultvenda.Date := DataModule1.qrySelecionaProdutos.FieldByName('ultvenda').AsDateTime;
+    // Margem de Lucro atacado 2
+    if Assigned(Formalterapreco.editmargematacado2) then
+      Formalterapreco.editmargematacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado2').AsFloat;
 
-// data da última alteração geral
-if Assigned(frmmenu.dtultalteracao) then
-    frmmenu.dtultalteracao.Date := DataModule1.qrySelecionaProdutos.FieldByName('DtAlteracao').AsDateTime;
+    // Margem de Lucro atacado 3
+    if Assigned(Formalterapreco.editmargematacado3) then
+      Formalterapreco.editmargematacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado3').AsFloat;
 
-  // data da última alteração geral
-if Assigned(frmmenu.dtultcompra) then
-    frmmenu.dtultcompra.Date := DataModule1.qrySelecionaProdutos.FieldByName('ultreaj').AsDateTime;
+    // Margem de Lucro atacado 4
+    if Assigned(Formalterapreco.editmargematacado4) then
+      Formalterapreco.editmargematacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('peratacado4').AsFloat;
 
-     // usuarios que fizeram alteraçao
-if Assigned(frmmenu.Editultalterar) then
-    frmmenu.Editultalterar.text := DataModule1.qrySelecionaProdutos.FieldByName ('lkusuario').Asstring;
+    // preço atacado 1
+    if Assigned(Formalterapreco.editprecoatacado1) then
+      Formalterapreco.editprecoatacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado1').AsFloat;
+
+    // preço atacado 2
+    if Assigned(Formalterapreco.editprecoatacado2) then
+      Formalterapreco.editprecoatacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado2').AsFloat;
+
+    // preço atacado 3
+    if Assigned(Formalterapreco.editprecoatacado3) then
+      Formalterapreco.editprecoatacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado3').AsFloat;
+
+    // preço atacado 4
+    if Assigned(Formalterapreco.editprecoatacado4) then
+      Formalterapreco.editprecoatacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado4').AsFloat;
 
 
+    // preço atacado unitario 1
+    if Assigned(Formalterapreco.editprecounatacado1) then
+      Formalterapreco.editprecounatacado1.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado1').AsFloat;
+
+    // preço atacado unitario 2
+    if Assigned(Formalterapreco.editprecounatacado2) then
+      Formalterapreco.editprecounatacado2.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado2').AsFloat;
+
+    // preço atacado unitario 3
+    if Assigned(Formalterapreco.editprecounatacado3) then
+      Formalterapreco.editprecounatacado3.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado3').AsFloat;
+
+    // preço atacado unitario 4
+    if Assigned(Formalterapreco.editprecounatacado4) then
+      Formalterapreco.editprecounatacado4.Value := DataModule1.qrySelecionaProdutos.FieldByName('pratacado4').AsFloat;
+
+    // quantidade na embalagem
+    if Assigned(Formalterapreco.editqtdembalagem) then
+      Formalterapreco.editqtdembalagem.text := DataModule1.qrySelecionaProdutos.FieldByName('qtdatacado').Asstring;
+
+    // quantidade mimina para atacado
+    if Assigned(Formalterapreco.editqtdminatacado) then
+      Formalterapreco.editqtdminatacado.text := DataModule1.qrySelecionaProdutos.FieldByName('qtdminpratacado').Asstring;
 
 
+    // data cadastro
+    if Assigned(Formalterapreco.dtdatacastro) then
+      Formalterapreco.dtdatacastro.Date := DataModule1.qrySelecionaProdutos.FieldByName('Data').AsDateTime; // Data de Cadastro
 
+    // data da última venda
+    if Assigned(Formalterapreco.dtultvenda) then
+      Formalterapreco.dtultvenda.Date := DataModule1.qrySelecionaProdutos.FieldByName('ultvenda').AsDateTime;
 
+    // data da última alteração geral
+    if Assigned(Formalterapreco.dtultalteracao) then
+      Formalterapreco.dtultalteracao.Date := DataModule1.qrySelecionaProdutos.FieldByName('DtAlteracao').AsDateTime;
 
+    // data da última compra/reajuste
+    if Assigned(Formalterapreco.dtultcompra) then
+      Formalterapreco.dtultcompra.Date := DataModule1.qrySelecionaProdutos.FieldByName('ultreaj').AsDateTime;
 
+    // usuarios que fizeram alteraçao
+    if Assigned(Formalterapreco.Editultalterar) then
+      Formalterapreco.Editultalterar.text := DataModule1.qrySelecionaProdutos.FieldByName ('lkusuario').Asstring;
 
+    if not DataModule1.qrySelecionaProdutos.IsEmpty then
+
+    // 1. CAPTURA o CodInterno do produto selecionado
+    // Este é o único dado necessário para o próximo passo.
+    sCodInterno := DataModule1.qrySelecionaProdutos.FieldByName('CODINTERNO').AsString;
+
+    if Assigned(Formalterapreco.RadioGroup1) then
+        begin
+            // 0 (Produto, não sai da tabela) ou 1 (Serviço, sai da tabela/não conta estoque)
+            Formalterapreco.RadioGroup1.ItemIndex := iNaoSaiTabela;
+        end;
+
+        Formalterapreco.AtualizarDiasSemAlteracao;
+        Formalterapreco. CarregarUltimoUsuarioAlteracao;
+
+    // 2. CRIA E ABRE o Formulário de Movimento (Tformmov)
+
+    // Cria a instância se ela não existir
 
     Close;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   end;
 end;
+
+
 
 procedure TSelectProduto.DBGridprodutosKeyPress(Sender: TObject; var Key: Char);
 begin
@@ -245,22 +287,39 @@ end;
 
 
 procedure TSelectProduto.EditSelectProdutoChange(Sender: TObject);
+var
+  sFiltro: string;
+  sTextoBusca: string;
 begin
+  // Texto a ser buscado (usado apenas uma vez para o QuotedStr)
+  sTextoBusca := QuotedStr('%' + EditSelectProduto.Text + '%');
+
+  // 1. Constrói a cláusula WHERE com todos os campos solicitados
+  sFiltro :=
+    'WHERE CODIGO LIKE ' + sTextoBusca +
+    ' OR CODINTERNO LIKE ' + sTextoBusca +
+    ' OR PRODUTO LIKE ' + sTextoBusca +
+    ' OR CODBARRA LIKE ' + sTextoBusca +          // << NOVO
+    ' OR CODFORNECEDOR LIKE ' + sTextoBusca +    // << NOVO
+    ' OR CODORIGEM LIKE ' + sTextoBusca +        // << NOVO
+    ' OR MOEDA LIKE ' + sTextoBusca;             // << NOVO (Localização)
+
   with DataModule1.qrySelecionaProdutos do
   begin
     Close;
-    SQL.Text := 'SELECT * FROM TABEST1 ' +
-                'WHERE CODIGO LIKE ' + QuotedStr('%' + EditSelectProduto.Text + '%') +
-                ' OR CODINTERNO LIKE ' + QuotedStr('%' + EditSelectProduto.Text + '%') +
-                ' OR CODBARRA LIKE ' + QuotedStr('%' + EditSelectProduto.Text + '%') +
-                ' OR CODFORNECEDOR LIKE ' + QuotedStr('%' + EditSelectProduto.Text + '%') +
-                ' OR PRODUTO LIKE ' + QuotedStr('%' + EditSelectProduto.Text + '%');
+
+    // NOTA: Usar 'SELECT *' pressupõe que a Query está configurada
+    // para buscar todos os campos necessários (incluindo NAOSAITABELA).
+    SQL.Text := 'SELECT * FROM TABEST1 ' + sFiltro;
+
     Open;
   end;
 
   // Associa a query ao DBGrid
   DBGridProdutos.DataSource := DataModule1.DSQRYSELECIONAPRODUTO;
 end;
+
+
 
 procedure TSelectProduto.EditselectprodutoKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);

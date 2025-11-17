@@ -4,8 +4,8 @@ object FRMSEN: TFRMSEN
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'AG Estoque'
-  ClientHeight = 208
-  ClientWidth = 393
+  ClientHeight = 546
+  ClientWidth = 817
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -5340,66 +5340,122 @@ object FRMSEN: TFRMSEN
   PixelsPerInch = 96
   TextHeight = 25
   object Panel1: TPanel
-    Left = 0
+    Left = 522
     Top = 0
-    Width = 393
-    Height = 208
-    Align = alClient
+    Width = 295
+    Height = 546
+    Align = alRight
+    Color = 3026478
+    ParentBackground = False
     TabOrder = 0
+    StyleElements = []
+    ExplicitLeft = 552
+    ExplicitTop = -8
+    ExplicitHeight = 567
     object Label1: TLabel
-      Left = 1
-      Top = 1
-      Width = 391
+      AlignWithMargins = True
+      Left = 4
+      Top = 151
+      Width = 287
       Height = 25
+      Margins.Top = 150
       Align = alTop
       Alignment = taCenter
       Caption = 'Usu'#225'rio'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Segoe UI Semibold'
+      Font.Style = [fsBold]
+      ParentFont = False
       StyleElements = []
       ExplicitWidth = 65
     end
     object Label2: TLabel
-      Left = 1
-      Top = 65
-      Width = 391
+      AlignWithMargins = True
+      Left = 4
+      Top = 221
+      Width = 287
       Height = 25
       Align = alTop
       Alignment = taCenter
       Caption = 'Senha'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Segoe UI Semibold'
+      Font.Style = [fsBold]
+      ParentFont = False
       StyleElements = []
       ExplicitWidth = 52
     end
     object Cmbusuario: TComboBox
       AlignWithMargins = True
-      Left = 4
-      Top = 29
-      Width = 385
+      Left = 21
+      Top = 182
+      Width = 253
       Height = 33
+      Margins.Left = 20
+      Margins.Right = 20
       Align = alTop
       Style = csDropDownList
       TabOrder = 0
       OnChange = CmbusuarioChange
+      ExplicitLeft = 4
+      ExplicitTop = 29
+      ExplicitWidth = 385
     end
     object EditSenha: TEdit
       AlignWithMargins = True
-      Left = 4
-      Top = 93
-      Width = 385
+      Left = 21
+      Top = 252
+      Width = 253
       Height = 33
+      Margins.Left = 20
+      Margins.Right = 20
       Align = alTop
       PasswordChar = '*'
       TabOrder = 1
+      ExplicitLeft = 4
+      ExplicitTop = 93
+      ExplicitWidth = 385
     end
     object btnlogar: TBitBtn
       AlignWithMargins = True
-      Left = 4
-      Top = 159
-      Width = 385
+      Left = 21
+      Top = 317
+      Width = 253
       Height = 45
-      Align = alBottom
+      Margins.Left = 20
+      Margins.Top = 29
+      Margins.Right = 20
+      Align = alTop
       Caption = 'Entrar'
       TabOrder = 2
       OnClick = btnlogarClick
+      ExplicitLeft = 4
+      ExplicitTop = 159
+      ExplicitWidth = 385
     end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 522
+    Height = 546
+    Align = alClient
+    Caption = 'AG Estoque'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -35
+    Font.Name = 'Segoe UI Semibold'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    ExplicitLeft = 8
+    ExplicitTop = -8
+    ExplicitWidth = 546
+    ExplicitHeight = 567
   end
   object QRYUSER: TUniQuery
     Left = 88

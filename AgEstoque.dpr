@@ -3,13 +3,15 @@ program AgEstoque;
 uses
   Forms,
   FRMSENHA in 'FRMSENHA.pas' {FRMSEN},
-  FRMAGESTOQUE in 'FRMAGESTOQUE.pas' {frmmenu},
+  FRMCONTARESTOQUE in 'FRMCONTARESTOQUE.pas' {formcontaestoque},
   CONEXAOBD in 'CONEXAOBD.pas' {DataModule1},
   Vcl.Themes,
   Vcl.Styles,
   FRMSelectproduto in 'FRMSelectproduto.pas' {SelectProduto},
   FRMMOVIMENTO in 'FRMMOVIMENTO.pas' {formmov},
-  FRMPOSICAOESTOQUE in 'FRMPOSICAOESTOQUE.pas' {Formposicaoest};
+  FRMPOSICAOESTOQUE in 'FRMPOSICAOESTOQUE.pas' {Formposicaoest},
+  FRM_MENU in 'FRM_MENU.pas' {Formenu},
+  FRMALTERAPRECOS in 'FRMALTERAPRECOS.pas' {Formalterapreco};
 
 {$R *.res}
 
@@ -17,7 +19,7 @@ begin
   Application.Initialize;
 
   // 1. Cria o DataModule de Conexão
-  TStyleManager.TrySetStyle('Lavender Classico');
+  TStyleManager.TrySetStyle('Turquoise Gray');
   Application.CreateForm(TDataModule1, DataModule1);
   // Instancia o formulário de login manualmente
   FRMSEN := TFRMSEN.Create(nil);
@@ -26,7 +28,7 @@ begin
     if FRMSEN.ShowModal = 1 then // 1 é o valor numérico de mrOk
     begin
       // 3. Cria o Formulário Principal (Menu)
-      Application.CreateForm(Tfrmmenu, frmmenu);
+      Application.CreateForm(Tformenu, formenu);
 
       // 4. Inicia a Aplicação com o Menu
       Application.Run;
