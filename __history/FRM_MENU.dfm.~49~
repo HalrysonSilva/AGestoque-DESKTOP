@@ -486,5 +486,6 @@ object Formenu: TFormenu
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
+    ExplicitTop = 128
   end
 end

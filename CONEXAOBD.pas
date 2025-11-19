@@ -381,6 +381,8 @@ begin
       //CarregarConexao('UniConnection1',UniConnectDialog1);
 //      ConectaBanco(false);
       ConectaBanco(true);
+
+
   finally
 
   end;

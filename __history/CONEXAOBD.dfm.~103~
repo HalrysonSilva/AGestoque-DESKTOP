@@ -6,9 +6,9 @@ object DataModule1: TDataModule1
   object ConDados: TUniConnection
     ProviderName = 'SQL Server'
     Port = 1433
-    Database = 'SERVSIC'
+    Database = 'Servsic'
     Username = 'sa'
-    Server = '.\Compuserve'
+    Server = '.\BASE'
     ConnectDialog = UniConnectDialog1
     LoginPrompt = False
     Left = 40
@@ -145,6 +145,8 @@ object DataModule1: TDataModule1
       ''
       'ALTER TABLE TAB_HIS_AJUSTE_CAB'
       'ADD STATUS BIT NULL; '
+      ''
+      ''
       '-- Use BIT para True/False. Se preferir 0/1, BIT '#233' ideal.'
       'SET IDENTITY_INSERT TabEstMovTipo ON;'
       ''
@@ -221,6 +223,35 @@ object DataModule1: TDataModule1
       'ALTER TABLE TabEst1Mov ADD PerAtacado4Novo FLOAT NULL;'
       ''
       ''
+      ''
+      
+        'IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'UltDtPre' +
+        'co'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
+      'BEGIN'
+      '    PRINT '#39'Adicionando coluna UltDtPreco na TabEst1'#39';'
+      '    ALTER TABLE TabEst1 ADD UltDtPreco DATETIME NULL;'
+      'END'
+      'ELSE'
+      'BEGIN'
+      '    PRINT '#39'Coluna UltDtPreco j'#225' existe na TabEst1.'#39';'
+      'END'
+      'GO'
+      ''
+      
+        '-- Verifica e adiciona a coluna para o Usu'#225'rio da '#218'ltima Altera'#231 +
+        #227'o de Pre'#231'o'
+      
+        'IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'LkUsuari' +
+        'oAltPreco'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
+      'BEGIN'
+      '    PRINT '#39'Adicionando coluna LkUsuarioAltPreco na TabEst1'#39';'
+      '    ALTER TABLE TabEst1 ADD LkUsuarioAltPreco INT NULL;'
+      'END'
+      'ELSE'
+      'BEGIN'
+      '    PRINT '#39'Coluna LkUsuarioAltPreco j'#225' existe na TabEst1.'#39';'
+      'END'
+      'GO'
       '')
     Left = 40
     Top = 328
@@ -501,165 +532,10 @@ object DataModule1: TDataModule1
   object qryTabest1mov: TUniQuery
     Connection = ConDados
     SQL.Strings = (
-      'SELECT * from tabest1mov')
+      '')
     ReadOnly = True
     Left = 238
     Top = 155
-    object qryTabest1movidControle: TIntegerField
-      FieldName = 'idControle'
-      ReadOnly = True
-      Required = True
-    end
-    object qryTabest1movIdEmpresa: TIntegerField
-      FieldName = 'IdEmpresa'
-    end
-    object qryTabest1movData: TDateTimeField
-      FieldName = 'Data'
-    end
-    object qryTabest1movPedido: TIntegerField
-      FieldName = 'Pedido'
-    end
-    object qryTabest1movLkItem: TIntegerField
-      FieldName = 'LkItem'
-      Required = True
-    end
-    object qryTabest1movCodInterno: TStringField
-      FieldName = 'CodInterno'
-    end
-    object qryTabest1movQuantidade: TFloatField
-      FieldName = 'Quantidade'
-    end
-    object qryTabest1movSaldoAnterior: TFloatField
-      FieldName = 'SaldoAnterior'
-    end
-    object qryTabest1movSaldo: TFloatField
-      FieldName = 'Saldo'
-    end
-    object qryTabest1movLkOperacao: TIntegerField
-      FieldName = 'LkOperacao'
-    end
-    object qryTabest1movLkVarejo: TIntegerField
-      FieldName = 'LkVarejo'
-    end
-    object qryTabest1movLkUsuario: TIntegerField
-      FieldName = 'LkUsuario'
-    end
-    object qryTabest1movLkTipo: TIntegerField
-      FieldName = 'LkTipo'
-    end
-    object qryTabest1movHora: TStringField
-      FieldName = 'Hora'
-      Size = 11
-    end
-    object qryTabest1movTerminal: TStringField
-      FieldName = 'Terminal'
-      Size = 30
-    end
-    object qryTabest1movLkCliFor: TIntegerField
-      FieldName = 'LkCliFor'
-    end
-    object qryTabest1movPrecoCustoAnterior: TCurrencyField
-      FieldName = 'PrecoCustoAnterior'
-    end
-    object qryTabest1movPrecoCustoNovo: TCurrencyField
-      FieldName = 'PrecoCustoNovo'
-    end
-    object qryTabest1movPrecoVendaAnterior: TCurrencyField
-      FieldName = 'PrecoVendaAnterior'
-    end
-    object qryTabest1movPrecoVendaNovo: TCurrencyField
-      FieldName = 'PrecoVendaNovo'
-    end
-    object qryTabest1movMargemVarejoAnterior: TFloatField
-      FieldName = 'MargemVarejoAnterior'
-    end
-    object qryTabest1movMargemVarejoNova: TFloatField
-      FieldName = 'MargemVarejoNova'
-    end
-    object qryTabest1movPrPrazoAnterior: TCurrencyField
-      FieldName = 'PrPrazoAnterior'
-    end
-    object qryTabest1movPrPrazoNovo: TCurrencyField
-      FieldName = 'PrPrazoNovo'
-    end
-    object qryTabest1movPerPrazoAnterior: TFloatField
-      FieldName = 'PerPrazoAnterior'
-    end
-    object qryTabest1movPerPrazoNovo: TFloatField
-      FieldName = 'PerPrazoNovo'
-    end
-    object qryTabest1movPrAtacadoVarejoAnterior: TCurrencyField
-      FieldName = 'PrAtacadoVarejoAnterior'
-    end
-    object qryTabest1movPrAtacadoVarejoNovo: TCurrencyField
-      FieldName = 'PrAtacadoVarejoNovo'
-    end
-    object qryTabest1movPerAtacadoVarejoAnterior: TFloatField
-      FieldName = 'PerAtacadoVarejoAnterior'
-    end
-    object qryTabest1movPerAtacadoVarejoNovo: TFloatField
-      FieldName = 'PerAtacadoVarejoNovo'
-    end
-    object qryTabest1movPrMinimoAnterior: TCurrencyField
-      FieldName = 'PrMinimoAnterior'
-    end
-    object qryTabest1movPrMinimoNovo: TCurrencyField
-      FieldName = 'PrMinimoNovo'
-    end
-    object qryTabest1movPerMinimoAnterior: TFloatField
-      FieldName = 'PerMinimoAnterior'
-    end
-    object qryTabest1movPerMinimoNovo: TFloatField
-      FieldName = 'PerMinimoNovo'
-    end
-    object qryTabest1movPrAtacado1Anterior: TCurrencyField
-      FieldName = 'PrAtacado1Anterior'
-    end
-    object qryTabest1movPrAtacado1Novo: TCurrencyField
-      FieldName = 'PrAtacado1Novo'
-    end
-    object qryTabest1movPerAtacado1Anterior: TFloatField
-      FieldName = 'PerAtacado1Anterior'
-    end
-    object qryTabest1movPerAtacado1Novo: TFloatField
-      FieldName = 'PerAtacado1Novo'
-    end
-    object qryTabest1movPrAtacado2Anterior: TCurrencyField
-      FieldName = 'PrAtacado2Anterior'
-    end
-    object qryTabest1movPrAtacado2Novo: TCurrencyField
-      FieldName = 'PrAtacado2Novo'
-    end
-    object qryTabest1movPerAtacado2Anterior: TFloatField
-      FieldName = 'PerAtacado2Anterior'
-    end
-    object qryTabest1movPerAtacado2Novo: TFloatField
-      FieldName = 'PerAtacado2Novo'
-    end
-    object qryTabest1movPrAtacado3Anterior: TCurrencyField
-      FieldName = 'PrAtacado3Anterior'
-    end
-    object qryTabest1movPrAtacado3Novo: TCurrencyField
-      FieldName = 'PrAtacado3Novo'
-    end
-    object qryTabest1movPerAtacado3Anterior: TFloatField
-      FieldName = 'PerAtacado3Anterior'
-    end
-    object qryTabest1movPerAtacado3Novo: TFloatField
-      FieldName = 'PerAtacado3Novo'
-    end
-    object qryTabest1movPrAtacado4Anterior: TCurrencyField
-      FieldName = 'PrAtacado4Anterior'
-    end
-    object qryTabest1movPrAtacado4Novo: TCurrencyField
-      FieldName = 'PrAtacado4Novo'
-    end
-    object qryTabest1movPerAtacado4Anterior: TFloatField
-      FieldName = 'PerAtacado4Anterior'
-    end
-    object qryTabest1movPerAtacado4Novo: TFloatField
-      FieldName = 'PerAtacado4Novo'
-    end
   end
   object DSqryTabest1mov: TDataSource
     DataSet = qryTabest1mov
@@ -836,7 +712,7 @@ object DataModule1: TDataModule1
   end
   object QRYUPDATETABESTMOV: TUniQuery
     Connection = ConDados
-    Left = 357
+    Left = 365
     Top = 83
   end
   object QryBuscaLkItem: TUniQuery
@@ -1706,17 +1582,18 @@ object DataModule1: TDataModule1
   object QRYALTERAPRECOS: TUniQuery
     Connection = ConDados
     SQL.Strings = (
-      'UPDATE TABEST1'
-      'SET'
+      '-- SQL para DataModule1.QRYALTERAPRECOS'
+      'UPDATE TabEst1 SET'
       '    -- Pre'#231'os Varejo'
       '    PrecoVenda = :PrVarejo1,'
-      '    Lucro      = :PerVarejo1,'
-      '    PrPrazo    = :PrVarejo2,'
-      '    PerPrazo   = :PerVarejo2,'
-      '    PrAtacado  = :PrVarejo3,'
+      '    Lucro = :PerVarejo1,'
+      '    PrPrazo = :PrVarejo2,'
+      '    PerPrazo = :PerVarejo2,'
+      '    PrAtacado = :PrVarejo3,'
       '    PerAtacado = :PerVarejo3,'
-      '    PrMinimo   = :PrVarejo4,'
-      '    PerMinimo  = :PerVarejo4,'
+      '    PrMinimo = :PrVarejo4,'
+      '    PerMinimo = :PerVarejo4,'
+      '    '
       '    -- Pre'#231'os Atacado'
       '    PrAtacado1 = :PrAtacado1,'
       '    PerAtacado1 = :PerAtacado1,'
@@ -1726,12 +1603,26 @@ object DataModule1: TDataModule1
       '    PerAtacado3 = :PerAtacado3,'
       '    PrAtacado4 = :PrAtacado4,'
       '    PerAtacado4 = :PerAtacado4,'
-      '    -- Controle'
-      '    DtAtualiza = GETDATE(),'
-      '    LkUsuario  = :LkUsuario'
+      '    '
+      '    -- Campos de Auditoria de Pre'#231'o (NOVOS)'
+      
+        '    UltDtPreco = GETDATE(),            -- Atualiza a data da alt' +
+        'era'#231#227'o'
+      
+        '    LkUsuarioAltPreco = :LkUsuario,   -- Usu'#225'rio que fez a alter' +
+        'a'#231#227'o'
+      '    '
+      '    -- Campos de Auditoria Geral (Mantidos)'
+      
+        '    DtAlteracao = GETDATE(),          -- Data da Altera'#231#227'o Geral' +
+        ' do Cadastro'
+      
+        '    LkUsuario = :LkUsuario            -- Usu'#225'rio da Altera'#231#227'o Ge' +
+        'ral do Cadastro'
+      ''
       'WHERE Controle = :Controle;')
-    Left = 528
-    Top = 152
+    Left = 520
+    Top = 136
     ParamData = <
       item
         DataType = ftUnknown
@@ -1828,8 +1719,8 @@ object DataModule1: TDataModule1
     Connection = ConDados
     SQL.Strings = (
       'SELECT * FROM TABEST1')
-    Left = 536
-    Top = 216
+    Left = 520
+    Top = 200
     object QRYPRODUTOSDETALHESControle: TIntegerField
       FieldName = 'Controle'
       Required = True
@@ -2297,12 +2188,17 @@ object DataModule1: TDataModule1
   end
   object QRY_BASE: TUniQuery
     Connection = ConDados
-    Left = 584
-    Top = 328
+    Left = 520
+    Top = 264
   end
   object QRY_DETALHES: TUniQuery
     Connection = ConDados
-    Left = 584
-    Top = 392
+    Left = 512
+    Top = 336
+  end
+  object UniTransaction1: TUniTransaction
+    DefaultConnection = ConDados
+    Left = 128
+    Top = 16
   end
 end

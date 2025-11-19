@@ -9,6 +9,7 @@ object DataModule1: TDataModule1
     Database = 'Servsic'
     Username = 'sa'
     Server = '.\BASE'
+    Connected = True
     ConnectDialog = UniConnectDialog1
     LoginPrompt = False
     Left = 40
@@ -44,8 +45,6 @@ object DataModule1: TDataModule1
   object QRYCRIATABELAS: TUniQuery
     Connection = ConDados
     SQL.Strings = (
-      '-- Usa GO como separador de lote'
-      ''
       '-- ######################################################'
       '-- 1. CRIA'#199#195'O CONDICIONAL DA TABELA DE CABE'#199'ALHO'
       '-- ######################################################'
@@ -54,9 +53,9 @@ object DataModule1: TDataModule1
       '    PRINT '#39'Criando tabela: TAB_HIS_AJUSTE_CAB'#39';'
       ''
       '    CREATE TABLE TAB_HIS_AJUSTE_CAB ('
-      '        NUMRELATORIO INT PRIMARY KEY IDENTITY(1,1), '
-      '        DATA_AJUSTE DATETIME NOT NULL DEFAULT GETDATE(), '
-      '        USUARIO VARCHAR(50) NOT NULL, '
+      '        NUMRELATORIO INT PRIMARY KEY IDENTITY(1,1),'
+      '        DATA_AJUSTE DATETIME NOT NULL DEFAULT GETDATE(),'
+      '        USUARIO VARCHAR(50) NOT NULL,'
       '        '
       '        -- CAMPO DE CONTROLE'
       '        LKUSUARIO INT NOT NULL,'
@@ -67,16 +66,36 @@ object DataModule1: TDataModule1
       '        PERIODO_INICIO DATE NULL,'
       '        PERIODO_FIM DATE NULL,'
       '        GRUPO_FILTRO VARCHAR(50) NULL,'
-      '        MARCA_FILTRO VARCHAR(50) NULL, '
+      '        MARCA_FILTRO VARCHAR(50) NULL,'
       '        FORNECEDOR_FILTRO VARCHAR(100) NULL,'
-      '        LOCALIZACAO_FILTRO VARCHAR(50) NULL'
+      '        LOCALIZACAO_FILTRO VARCHAR(50) NULL,'
+      '        '
+      
+        '        -- NOVO CAMPO ADICIONADO ABAIXO, INCLU'#205'DO AQUI PARA CONS' +
+        'OLIDAR'
+      '        STATUS BIT NULL'
       '    );'
       'END'
       'ELSE'
       'BEGIN'
       '    PRINT '#39'TAB_HIS_AJUSTE_CAB j'#225' existe. Cria'#231#227'o ignorada.'#39';'
       'END'
-      'GO'
+      'GO -- FIM DO LOTE 1 (Separar aqui para o TNtQuery)'
+      ''
+      
+        '-- Garante que o campo STATUS seja adicionado se a tabela j'#225' exi' +
+        'stia antes da '#250'ltima altera'#231#227'o'
+      
+        'IF OBJECT_ID('#39'TAB_HIS_AJUSTE_CAB'#39', '#39'U'#39') IS NOT NULL AND NOT EXIS' +
+        'TS (SELECT 1 FROM sys.columns WHERE Name = N'#39'STATUS'#39' AND Object_' +
+        'ID = Object_ID(N'#39'TAB_HIS_AJUSTE_CAB'#39'))'
+      'BEGIN'
+      '    PRINT '#39'Adicionando coluna STATUS na TAB_HIS_AJUSTE_CAB'#39';'
+      '    ALTER TABLE TAB_HIS_AJUSTE_CAB ADD STATUS BIT NULL;'
+      'END'
+      'GO -- FIM DO LOTE 2 (Separar aqui para o TNtQuery)'
+      ''
+      '---'
       ''
       '-- ######################################################'
       '-- 2. CRIA'#199#195'O CONDICIONAL DA TABELA DE ITENS'
@@ -87,8 +106,8 @@ object DataModule1: TDataModule1
       ''
       '    CREATE TABLE TAB_HIS_AJUSTE_ITENS ('
       '        ID_ITEM INT PRIMARY KEY IDENTITY(1,1),'
-      '        NUMRELATORIO INT NOT NULL, '
-      '        CODINTERNO VARCHAR(20) NOT NULL, '
+      '        NUMRELATORIO INT NOT NULL,'
+      '        CODINTERNO VARCHAR(20) NOT NULL,'
       '        PRODUTO_DESCRICAO VARCHAR(100) NULL,'
       '        '
       '        -- CAMPOS DETALHADOS DO ITEM (DO CDSPRODUTOS)'
@@ -101,9 +120,9 @@ object DataModule1: TDataModule1
       '        LOCALIZACAO VARCHAR(50) NULL,'
       '        CUSTO_TOTAL MONEY NULL,'
       ''
-      '        ESTOQUE_ANTERIOR FLOAT NOT NULL, '
-      '        CONTAGEM_FINAL FLOAT NOT NULL, '
-      '        DIFERENCA FLOAT NOT NULL, '
+      '        ESTOQUE_ANTERIOR FLOAT NOT NULL,'
+      '        CONTAGEM_FINAL FLOAT NOT NULL,'
+      '        DIFERENCA FLOAT NOT NULL,'
       '        PRECO_CUSTO MONEY NULL,'
       '        VALOR_DIFERENCA MONEY NULL'
       '    );'
@@ -112,20 +131,19 @@ object DataModule1: TDataModule1
       'BEGIN'
       '    PRINT '#39'TAB_HIS_AJUSTE_ITENS j'#225' existe. Cria'#231#227'o ignorada.'#39';'
       'END'
-      'GO'
+      'GO -- FIM DO LOTE 3 (Separar aqui para o TNtQuery)'
+      ''
+      '---'
       ''
       '-- ######################################################'
       '-- 3. CRIA'#199#195'O CONDICIONAL DA CHAVE ESTRANGEIRA (FK)'
       '-- ######################################################'
-      
-        '-- A FK s'#243' pode ser criada se ambas as tabelas existirem e a FK ' +
-        'n'#227'o existir'
       'IF OBJECT_ID('#39'TAB_HIS_AJUSTE_CAB'#39', '#39'U'#39') IS NOT NULL AND '
-      '   OBJECT_ID('#39'TAB_HIS_AJUSTE_ITENS'#39', '#39'U'#39') IS NOT NULL AND'
+      '    OBJECT_ID('#39'TAB_HIS_AJUSTE_ITENS'#39', '#39'U'#39') IS NOT NULL AND'
       
-        '   NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = '#39'FK_A' +
-        'JUSTE_CAB'#39' AND parent_object_id = OBJECT_ID('#39'TAB_HIS_AJUSTE_ITEN' +
-        'S'#39'))'
+        '    NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = '#39'FK_' +
+        'AJUSTE_CAB'#39' AND parent_object_id = OBJECT_ID('#39'TAB_HIS_AJUSTE_ITE' +
+        'NS'#39'))'
       'BEGIN'
       '    PRINT '#39'Criando Chave Estrangeira: FK_AJUSTE_CAB'#39';'
       '    '
@@ -140,119 +158,442 @@ object DataModule1: TDataModule1
         '    PRINT '#39'Chave Estrangeira FK_AJUSTE_CAB j'#225' existe ou tabelas ' +
         'n'#227'o est'#227'o prontas. Cria'#231#227'o ignorada.'#39';'
       'END'
-      'GO'
+      'GO -- FIM DO LOTE 4 (Separar aqui para o TNtQuery)'
       ''
+      '---'
       ''
-      'ALTER TABLE TAB_HIS_AJUSTE_CAB'
-      'ADD STATUS BIT NULL; '
-      ''
-      ''
-      '-- Use BIT para True/False. Se preferir 0/1, BIT '#233' ideal.'
-      'SET IDENTITY_INSERT TabEstMovTipo ON;'
-      ''
-      '-- Insere o novo tipo de movimento com o valor expl'#237'cito 7'
-      
-        'INSERT INTO TabEstMovTipo (Controle, Tipo, LkOperacao, IdControl' +
-        'e)'
-      'VALUES (7, '#39'ALTERACAO DE PRECO'#39', 1, 7);'
-      ''
-      'SET IDENTITY_INSERT TabEstMovTipo OFF;'
-      ''
-      ''
-      ''
-      '-- 1. ADICIONA CUSTO E PRE'#199'O DE VENDA PRINCIPAL (VAREJO 1)'
-      ''
-      '-- Custo'
-      'ALTER TABLE TabEst1Mov ADD PrecoCustoAnterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrecoCustoNovo MONEY NULL;'
-      ''
-      '-- Varejo 1 (PrecoVenda / Lucro)'
-      'ALTER TABLE TabEst1Mov ADD PrecoVendaAnterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrecoVendaNovo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD MargemVarejoAnterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD MargemVarejoNova FLOAT NULL;'
-      ''
-      ''
-      
-        '-- 2. ADICIONA PRE'#199'OS E MARGENS VAREJO 2, 3 E 4 (PrPrazo, PrAtac' +
-        'ado, PrMinimo)'
-      ''
-      '-- Varejo 2 (PrPrazo / PerPrazo)'
-      'ALTER TABLE TabEst1Mov ADD PrPrazoAnterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrPrazoNovo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerPrazoAnterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerPrazoNovo FLOAT NULL;'
-      ''
-      '-- Varejo 3 (PrAtacado / PerAtacado)'
-      'ALTER TABLE TabEst1Mov ADD PrAtacadoVarejoAnterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrAtacadoVarejoNovo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacadoVarejoAnterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacadoVarejoNovo FLOAT NULL;'
-      ''
-      '-- Varejo 4 (PrMinimo / PerMinimo)'
-      'ALTER TABLE TabEst1Mov ADD PrMinimoAnterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrMinimoNovo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerMinimoAnterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerMinimoNovo FLOAT NULL;'
-      ''
-      ''
-      '-- 3. ADICIONA PRE'#199'OS E MARGENS ATACADO 1, 2, 3 E 4'
-      ''
-      '-- Atacado 1 (PrAtacado1 / PerAtacado1)'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado1Anterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado1Novo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado1Anterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado1Novo FLOAT NULL;'
-      ''
-      '-- Atacado 2 (PrAtacado2 / PerAtacado2)'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado2Anterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado2Novo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado2Anterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado2Novo FLOAT NULL;'
-      ''
-      '-- Atacado 3 (PrAtacado3 / PerAtacado3)'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado3Anterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado3Novo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado3Anterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado3Novo FLOAT NULL;'
-      ''
-      '-- Atacado 4 (PrAtacado4 / PerAtacado4)'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado4Anterior MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PrAtacado4Novo MONEY NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado4Anterior FLOAT NULL;'
-      'ALTER TABLE TabEst1Mov ADD PerAtacado4Novo FLOAT NULL;'
-      ''
-      ''
-      ''
-      
-        'IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'UltDtPre' +
-        'co'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
+      '-- ######################################################'
+      '-- 4. CRIA'#199#195'O CONDICIONAL DO TIPO DE MOVIMENTO (LK=7)'
+      '-- ######################################################'
+      'IF NOT EXISTS (SELECT 1 FROM TabEstMovTipo WHERE Controle = 7)'
       'BEGIN'
-      '    PRINT '#39'Adicionando coluna UltDtPreco na TabEst1'#39';'
-      '    ALTER TABLE TabEst1 ADD UltDtPreco DATETIME NULL;'
+      
+        '    PRINT '#39'Criando Tipo de Movimento: ALTERACAO DE PRECO (Contro' +
+        'le 7)'#39';'
+      '    '
+      '    SET IDENTITY_INSERT TabEstMovTipo ON;'
+      '    '
+      
+        '    INSERT INTO TabEstMovTipo (Controle, Tipo, LkOperacao, IdCon' +
+        'trole)'
+      '    VALUES (7, '#39'ALTERACAO DE PRECO'#39', 1, 7);'
+      '    '
+      '    SET IDENTITY_INSERT TabEstMovTipo OFF;'
       'END'
       'ELSE'
       'BEGIN'
-      '    PRINT '#39'Coluna UltDtPreco j'#225' existe na TabEst1.'#39';'
+      
+        '    PRINT '#39'Tipo de Movimento (Controle 7) j'#225' existe. Cria'#231#227'o ign' +
+        'orada.'#39';'
       'END'
-      'GO'
+      'GO -- FIM DO LOTE 5 (Separar aqui para o TNtQuery)'
+      ''
+      '---'
+      ''
+      '-- ######################################################'
+      '-- 5. ADI'#199#195'O CONDICIONAL DE CAMPOS DE PRE'#199'O NA TABEST1MOV'
+      '-- ######################################################'
+      'IF OBJECT_ID('#39'TabEst1Mov'#39', '#39'U'#39') IS NOT NULL'
+      'BEGIN'
+      '    -- Custo'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Prec' +
+        'oCustoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrecoCustoAnterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrecoCustoAnterior MONEY NULL' +
+        ';'
+      '    END'
       ''
       
-        '-- Verifica e adiciona a coluna para o Usu'#225'rio da '#218'ltima Altera'#231 +
-        #227'o de Pre'#231'o'
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Prec' +
+        'oCustoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrecoCustoNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrecoCustoNovo MONEY NULL;'
+      '    END'
+      '    '
+      '    -- Varejo 1 (PrecoVenda / Lucro)'
       
-        'IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'LkUsuari' +
-        'oAltPreco'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
-      'BEGIN'
-      '    PRINT '#39'Adicionando coluna LkUsuarioAltPreco na TabEst1'#39';'
-      '    ALTER TABLE TabEst1 ADD LkUsuarioAltPreco INT NULL;'
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Prec' +
+        'oVendaAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrecoVendaAnterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrecoVendaAnterior MONEY NULL' +
+        ';'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Prec' +
+        'oVendaNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrecoVendaNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrecoVendaNovo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Marg' +
+        'emVarejoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna MargemVarejoAnterior na TabEst' +
+        '1Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD MargemVarejoAnterior FLOAT NU' +
+        'LL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'Marg' +
+        'emVarejoNova'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna MargemVarejoNova na TabEst1Mov' +
+        #39';'
+      '        ALTER TABLE TabEst1Mov ADD MargemVarejoNova FLOAT NULL;'
+      '    END'
+      ''
+      '    -- Varejo 2 (PrPrazo / PerPrazo)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrPr' +
+        'azoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrPrazoAnterior na TabEst1Mov'#39 +
+        ';'
+      '        ALTER TABLE TabEst1Mov ADD PrPrazoAnterior MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrPr' +
+        'azoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrPrazoNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrPrazoNovo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerP' +
+        'razoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerPrazoAnterior na TabEst1Mov' +
+        #39';'
+      '        ALTER TABLE TabEst1Mov ADD PerPrazoAnterior FLOAT NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerP' +
+        'razoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PerPrazoNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PerPrazoNovo FLOAT NULL;'
+      '    END'
+      ''
+      '    -- Varejo 3 (PrAtacado / PerAtacado)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acadoVarejoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacadoVarejoAnterior na Tab' +
+        'Est1Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacadoVarejoAnterior MONEY' +
+        ' NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acadoVarejoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacadoVarejoNovo na TabEst1' +
+        'Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacadoVarejoNovo MONEY NUL' +
+        'L;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacadoVarejoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacadoVarejoAnterior na Ta' +
+        'bEst1Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacadoVarejoAnterior FLOA' +
+        'T NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacadoVarejoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacadoVarejoNovo na TabEst' +
+        '1Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacadoVarejoNovo FLOAT NU' +
+        'LL;'
+      '    END'
+      ''
+      '    -- Varejo 4 (PrMinimo / PerMinimo)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrMi' +
+        'nimoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrMinimoAnterior na TabEst1Mov' +
+        #39';'
+      '        ALTER TABLE TabEst1Mov ADD PrMinimoAnterior MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrMi' +
+        'nimoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrMinimoNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrMinimoNovo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerM' +
+        'inimoAnterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerMinimoAnterior na TabEst1Mo' +
+        'v'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PerMinimoAnterior FLOAT NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerM' +
+        'inimoNovo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PerMinimoNovo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PerMinimoNovo FLOAT NULL;'
+      '    END'
+      ''
+      '    -- Atacado 1 (PrAtacado1 / PerAtacado1)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado1Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacado1Anterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacado1Anterior MONEY NULL' +
+        ';'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado1Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrAtacado1Novo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrAtacado1Novo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado1Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado1Anterior na TabEst1' +
+        'Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacado1Anterior FLOAT NUL' +
+        'L;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado1Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado1Novo na TabEst1Mov'#39 +
+        ';'
+      '        ALTER TABLE TabEst1Mov ADD PerAtacado1Novo FLOAT NULL;'
+      '    END'
+      '    '
+      '    -- Atacado 2 (PrAtacado2 / PerAtacado2)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado2Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacado2Anterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacado2Anterior MONEY NULL' +
+        ';'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado2Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrAtacado2Novo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrAtacado2Novo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado2Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado2Anterior na TabEst1' +
+        'Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacado2Anterior FLOAT NUL' +
+        'L;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado2Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado2Novo na TabEst1Mov'#39 +
+        ';'
+      '        ALTER TABLE TabEst1Mov ADD PerAtacado2Novo FLOAT NULL;'
+      '    END'
+      ''
+      '    -- Atacado 3 (PrAtacado3 / PerAtacado3)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado3Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacado3Anterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacado3Anterior MONEY NULL' +
+        ';'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado3Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrAtacado3Novo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrAtacado3Novo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado3Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado3Anterior na TabEst1' +
+        'Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacado3Anterior FLOAT NUL' +
+        'L;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado3Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado3Novo na TabEst1Mov'#39 +
+        ';'
+      '        ALTER TABLE TabEst1Mov ADD PerAtacado3Novo FLOAT NULL;'
+      '    END'
+      ''
+      '    -- Atacado 4 (PrAtacado4 / PerAtacado4)'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado4Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PrAtacado4Anterior na TabEst1M' +
+        'ov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PrAtacado4Anterior MONEY NULL' +
+        ';'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PrAt' +
+        'acado4Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna PrAtacado4Novo na TabEst1Mov'#39';'
+      '        ALTER TABLE TabEst1Mov ADD PrAtacado4Novo MONEY NULL;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado4Anterior'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado4Anterior na TabEst1' +
+        'Mov'#39';'
+      
+        '        ALTER TABLE TabEst1Mov ADD PerAtacado4Anterior FLOAT NUL' +
+        'L;'
+      '    END'
+      ''
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'PerA' +
+        'tacado4Novo'#39' AND Object_ID = Object_ID(N'#39'TabEst1Mov'#39'))'
+      '    BEGIN'
+      
+        '        PRINT '#39'Adicionando coluna PerAtacado4Novo na TabEst1Mov'#39 +
+        ';'
+      '        ALTER TABLE TabEst1Mov ADD PerAtacado4Novo FLOAT NULL;'
+      '    END'
       'END'
-      'ELSE'
+      'GO -- FIM DO LOTE 6 (Separar aqui para o TNtQuery)'
+      ''
+      '---'
+      ''
+      '-- ######################################################'
+      '-- 6. ADI'#199#195'O CONDICIONAL DE CAMPOS DE AUDITORIA NA TABEST1'
+      '-- ######################################################'
+      'IF OBJECT_ID('#39'TabEst1'#39', '#39'U'#39') IS NOT NULL'
       'BEGIN'
-      '    PRINT '#39'Coluna LkUsuarioAltPreco j'#225' existe na TabEst1.'#39';'
+      
+        '    -- Verifica e adiciona a coluna para a Data da '#218'ltima Altera' +
+        #231#227'o de Pre'#231'o'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'UltD' +
+        'tPreco'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna UltDtPreco na TabEst1'#39';'
+      '        ALTER TABLE TabEst1 ADD UltDtPreco DATETIME NULL;'
+      '    END'
+      '    ELSE'
+      '    BEGIN'
+      '        PRINT '#39'Coluna UltDtPreco j'#225' existe na TabEst1.'#39';'
+      '    END'
+      ''
+      
+        '    -- Verifica e adiciona a coluna para o Usu'#225'rio da '#218'ltima Alt' +
+        'era'#231#227'o de Pre'#231'o'
+      
+        '    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE Name = N'#39'LkUs' +
+        'uarioAltPreco'#39' AND Object_ID = Object_ID(N'#39'TabEst1'#39'))'
+      '    BEGIN'
+      '        PRINT '#39'Adicionando coluna LkUsuarioAltPreco na TabEst1'#39';'
+      '        ALTER TABLE TabEst1 ADD LkUsuarioAltPreco INT NULL;'
+      '    END'
+      '    ELSE'
+      '    BEGIN'
+      '        PRINT '#39'Coluna LkUsuarioAltPreco j'#225' existe na TabEst1.'#39';'
+      '    END'
       'END'
-      'GO'
-      '')
+      'GO -- FIM DO LOTE 7 (Separar aqui para o TNtQuery)')
     Left = 40
     Top = 328
   end

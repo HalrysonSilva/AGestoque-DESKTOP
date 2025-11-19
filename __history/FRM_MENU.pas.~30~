@@ -11,20 +11,20 @@ uses
 
 type
   TFormenu = class(TForm)
-    Panel1: TPanel;
     Panel2: TPanel;
     brnalterapreco: TAdvGlowButton;
-    Panel3: TPanel;
-    btnmovimento: TAdvGlowButton;
     btncontagem: TAdvGlowButton;
-    AdvGlowButton1: TAdvGlowButton;
+    btnprodutoemaberto: TAdvGlowButton;
+    Panel1: TPanel;
 
     procedure brnalteraprecoClick(Sender: TObject);
     procedure AdvGlowButton1Click(Sender: TObject);
 
-    procedure btnmovimentoClick(Sender: TObject);
+
     procedure btncontagemClick(Sender: TObject);
-    
+    procedure btnprodutoemabertoClick(Sender: TObject);
+
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -88,16 +88,24 @@ begin
   Formcontaestoque.ShowModal;
 end;
 
-procedure TFormenu.btnmovimentoClick(Sender: TObject);
+
+
+
+procedure TFormenu.btnprodutoemabertoClick(Sender: TObject);
 begin
   // 1. Cria ou exibe a instância do novo formulário
   if not Assigned(Formposicaoest) then
-    Formmov:= TFormmov.Create(Application);
+    Formposicaoest:= TFormposicaoest.Create(Application);
 
-
+   Formposicaoest.CarregarProdutosEmAbertoEExibir;
 
   // 3. Exibe o formulário
-  Formmov.ShowModal;
+  Formposicaoest.ShowModal;
+end;
+
+procedure TFormenu.FormShow(Sender: TObject);
+begin
+ formcontaestoque.CriarEstruturaManualCDS;
 end;
 
 end.
